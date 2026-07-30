@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drivers — messages contraignants</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/drivers.css">
+</head>
+<body>
+  <header class="outil-entete">
+    <a class="retour" href="../index.html">← Accueil</a>
+    <h1>Drivers — les cinq messages contraignants</h1>
+  </header>
+
+  <main class="drivers-layout">
+    <section class="carte-section zone-profil">
+      <h2>Mon profil</h2>
+      <p class="note">Reportez vos scores (0 à 10) avec le curseur de chaque carte
+        ci-dessous : le profil se construit tout seul.</p>
+      <div id="barres-profil" class="barres-profil"></div>
+      <div id="encart-dominant" class="encart-dominant" hidden>
+        <h3 id="dominant-titre"></h3>
+        <p id="dominant-permission"></p>
+      </div>
+    </section>
+
+    <section class="grille-drivers" id="grille-drivers"></section>
+  </main>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/drivers.js"></script>
+</body>
+</html>
