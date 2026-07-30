@@ -7,11 +7,11 @@
 const CLE = "tki";
 
 const NOMS = {
-  competition: "Compétition",
-  collaboration: "Collaboration",
-  compromis: "Compromis",
-  evitement: "Évitement",
-  accommodation: "Accommodation",
+  competition: "Rivaliser",
+  collaboration: "Collaborer",
+  compromis: "Chercher un compromis",
+  evitement: "Éviter",
+  accommodation: "Céder",
 };
 
 const DEFAUT = {

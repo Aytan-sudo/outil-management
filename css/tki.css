@@ -18,7 +18,7 @@
 
 .ligne-score {
   display: grid;
-  grid-template-columns: 9.5rem 1fr 2rem;
+  grid-template-columns: 10.5rem 1fr 2rem;
   align-items: center;
   gap: 0.6rem;
   font-size: 0.9rem;
