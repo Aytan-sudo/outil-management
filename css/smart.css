@@ -1,0 +1,295 @@
+:root {
+  --s-directif: #2a78d6;
+  --s-delegatif: #1baf7a;
+  --s-persuasif: #d03b3b;
+  --s-participatif: #eda100;
+}
+
+.smart-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.colonne-objectifs,
+.colonne-delegation {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* --- Objectifs SMART --- */
+
+.ligne-ajout { display: flex; gap: 0.5rem; }
+.ligne-ajout input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  font: inherit;
+}
+.ligne-ajout button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.formulaire-objectif .note { margin-bottom: 0; }
+
+.liste-objectifs { display: flex; flex-direction: column; gap: 1rem; }
+
+.objectif-entete {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+.objectif-entete h3 {
+  flex: 1;
+  margin: 0;
+  font-size: 1rem;
+  min-width: 0;
+}
+.objectif-entete button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  opacity: 0.6;
+  font-size: 0.9rem;
+}
+.objectif-entete button:hover { opacity: 1; }
+
+.badge-score {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: white;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+}
+.badge-score.score-ok { background: #0ca30c; }
+.badge-score.score-moyen { background: #b97e00; }
+.badge-score.score-faible { background: #d03b3b; }
+
+.critere {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.3rem 0;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.critere input { margin-top: 0.2rem; accent-color: var(--accent); }
+.critere strong { font-weight: 600; }
+.critere small {
+  display: block;
+  color: var(--texte-secondaire);
+  font-size: 0.78rem;
+}
+
+/* --- Formulaire collaborateur --- */
+
+.formulaire-collab {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.formulaire-collab h2 { margin: 0; }
+.formulaire-collab input[type="text"] {
+  padding: 0.5rem;
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  font: inherit;
+}
+.formulaire-collab label {
+  font-size: 0.85rem;
+  color: var(--texte-secondaire);
+}
+.formulaire-collab input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.actions-formulaire { display: flex; gap: 0.5rem; }
+.actions-formulaire button {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.actions-formulaire button.secondaire {
+  background: var(--bordure);
+  color: var(--texte);
+}
+
+/* --- Mini-matrice de délégation --- */
+
+.mini-matrice {
+  position: relative;
+  aspect-ratio: 1;
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.mini-matrice .quadrant { position: absolute; width: 50%; height: 50%; }
+.quadrant.q-directif     { top: 0; left: 0;
+  background: color-mix(in srgb, var(--s-directif) 13%, transparent); }
+.quadrant.q-delegatif    { top: 0; right: 0;
+  background: color-mix(in srgb, var(--s-delegatif) 13%, transparent); }
+.quadrant.q-persuasif    { bottom: 0; left: 0;
+  background: color-mix(in srgb, var(--s-persuasif) 13%, transparent); }
+.quadrant.q-participatif { bottom: 0; right: 0;
+  background: color-mix(in srgb, var(--s-participatif) 17%, transparent); }
+
+.mini-matrice .etiquette {
+  position: absolute;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.q-directif .etiquette     { top: 0.5rem; left: 0.7rem; color: var(--s-directif); }
+.q-delegatif .etiquette    { top: 0.5rem; right: 0.7rem; color: var(--s-delegatif); }
+.q-persuasif .etiquette    { bottom: 0.5rem; left: 0.7rem; color: var(--s-persuasif); }
+.q-participatif .etiquette { bottom: 0.5rem; right: 0.7rem; color: #a87200; }
+
+.ligne { position: absolute; background: var(--bordure); }
+.ligne-verticale   { left: 50%; top: 0; width: 1px; height: 100%; }
+.ligne-horizontale { top: 50%; left: 0; height: 1px; width: 100%; }
+
+.axe {
+  position: absolute;
+  font-size: 0.65rem;
+  color: #898781;
+  pointer-events: none;
+}
+.axe-competence { bottom: 0.25rem; left: 50%; transform: translateX(-50%); }
+.axe-motivation {
+  top: 50%;
+  left: 0.9rem;
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.calque-collabs { position: absolute; inset: 0; pointer-events: none; }
+
+.point-collab {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid white;
+  background: var(--texte-secondaire);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.point-collab.s-directif     { background: var(--s-directif); }
+.point-collab.s-delegatif    { background: var(--s-delegatif); }
+.point-collab.s-persuasif    { background: var(--s-persuasif); }
+.point-collab.s-participatif { background: var(--s-participatif); }
+.point-collab.selection { outline: 2px solid var(--texte); outline-offset: 1px; }
+
+.point-collab small {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--texte);
+  white-space: nowrap;
+  text-shadow: 0 0 3px var(--carte), 0 0 3px var(--carte);
+}
+
+/* --- Conseil et liste --- */
+
+.conseil {
+  margin-bottom: 0.75rem;
+  padding: 0.8rem 1rem;
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.conseil.s-directif     { border-color: var(--s-directif);
+  background: color-mix(in srgb, var(--s-directif) 9%, transparent); }
+.conseil.s-delegatif    { border-color: var(--s-delegatif);
+  background: color-mix(in srgb, var(--s-delegatif) 9%, transparent); }
+.conseil.s-persuasif    { border-color: var(--s-persuasif);
+  background: color-mix(in srgb, var(--s-persuasif) 9%, transparent); }
+.conseil.s-participatif { border-color: var(--s-participatif);
+  background: color-mix(in srgb, var(--s-participatif) 11%, transparent); }
+.conseil h3 { margin: 0 0 0.3rem; font-size: 0.95rem; }
+.conseil p { margin: 0; font-size: 0.88rem; }
+
+.liste-collabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.collab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  padding: 0.45rem 0.6rem;
+}
+.collab.selection { border-color: var(--accent); }
+
+.pastille {
+  flex-shrink: 0;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--texte-secondaire);
+}
+.pastille.s-directif     { background: var(--s-directif); }
+.pastille.s-delegatif    { background: var(--s-delegatif); }
+.pastille.s-persuasif    { background: var(--s-persuasif); }
+.pastille.s-participatif { background: var(--s-participatif); }
+
+.collab-corps { flex: 1; min-width: 0; cursor: pointer; }
+.collab-nom {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.collab-scores { font-size: 0.7rem; color: var(--texte-secondaire); }
+
+.collab button {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.15rem;
+  opacity: 0.6;
+}
+.collab button:hover { opacity: 1; }
+
+/* --- Mobile --- */
+
+@media (max-width: 820px) {
+  .smart-layout { grid-template-columns: 1fr; }
+}

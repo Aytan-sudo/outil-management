@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMART &amp; délégation</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/smart.css">
+</head>
+<body>
+  <header class="outil-entete">
+    <a class="retour" href="../index.html">← Accueil</a>
+    <h1>Objectifs SMART &amp; délégation</h1>
+  </header>
+
+  <main class="smart-layout">
+    <section class="colonne-objectifs">
+      <form id="formulaire-objectif" class="carte-section formulaire-objectif">
+        <h2>Mes objectifs</h2>
+        <div class="ligne-ajout">
+          <input type="text" id="champ-objectif" placeholder="Formulez un objectif…"
+            required maxlength="120" autocomplete="off">
+          <button type="submit">Ajouter</button>
+        </div>
+        <p class="note">Cochez ensuite les critères validés : un objectif est SMART à 5/5.</p>
+      </form>
+      <div id="liste-objectifs" class="liste-objectifs"></div>
+    </section>
+
+    <section class="colonne-delegation">
+      <form id="formulaire-collab" class="carte-section formulaire-collab">
+        <h2 id="titre-formulaire">À qui déléguer ?</h2>
+        <input type="text" id="champ-nom" placeholder="Prénom ou nom du collaborateur"
+          required maxlength="40" autocomplete="off">
+        <label>Compétence sur le sujet : <output id="valeur-competence">10</output>/20
+          <input type="range" id="champ-competence" min="0" max="20" value="10">
+        </label>
+        <label>Motivation : <output id="valeur-motivation">10</output>/20
+          <input type="range" id="champ-motivation" min="0" max="20" value="10">
+        </label>
+        <div class="actions-formulaire">
+          <button type="submit" id="bouton-valider">Ajouter</button>
+          <button type="button" id="bouton-annuler" class="secondaire" hidden>Annuler</button>
+        </div>
+      </form>
+
+      <div class="carte-section">
+        <div class="mini-matrice" id="mini-matrice">
+          <div class="quadrant q-directif"><span class="etiquette">Directif</span></div>
+          <div class="quadrant q-delegatif"><span class="etiquette">Délégatif</span></div>
+          <div class="quadrant q-persuasif"><span class="etiquette">Persuasif</span></div>
+          <div class="quadrant q-participatif"><span class="etiquette">Participatif</span></div>
+          <div class="ligne ligne-verticale"></div>
+          <div class="ligne ligne-horizontale"></div>
+          <span class="axe axe-competence">Compétence →</span>
+          <span class="axe axe-motivation">Motivation →</span>
+          <div id="calque-collabs" class="calque-collabs"></div>
+        </div>
+        <div id="conseil" class="conseil" hidden>
+          <h3 id="conseil-titre"></h3>
+          <p id="conseil-texte"></p>
+        </div>
+        <ul id="liste-collabs" class="liste-collabs"></ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/smart.js"></script>
+</body>
+</html>
