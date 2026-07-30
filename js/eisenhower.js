@@ -24,6 +24,7 @@ const valeurUrgence = document.getElementById("valeur-urgence");
 const titreFormulaire = document.getElementById("titre-formulaire");
 const boutonValider = document.getElementById("bouton-valider");
 const boutonAnnuler = document.getElementById("bouton-annuler");
+const boutonPurge = document.getElementById("bouton-purge");
 
 /* Marges pour que les vignettes (centrées sur leur point) restent lisibles
    dans la matrice, y compris aux scores extrêmes. */
@@ -87,6 +88,11 @@ function renderMatrice() {
     v.addEventListener("pointerdown", surPointerDown);
     calque.appendChild(v);
   }
+
+  const nbAbandon = taches.filter((t) => quadrantDe(t) === "abandonner").length;
+  boutonPurge.disabled = nbAbandon === 0;
+  boutonPurge.textContent =
+    "🗑 Tout supprimer" + (nbAbandon ? " (" + nbAbandon + ")" : "");
 }
 
 function renderListe() {
@@ -248,6 +254,25 @@ formulaire.addEventListener("submit", (e) => {
 });
 
 boutonAnnuler.addEventListener("click", reinitialiserFormulaire);
+
+/* Purge du quadrant « Abandonner » : les vignettes s'évaporent, puis on supprime. */
+boutonPurge.addEventListener("click", () => {
+  const ids = taches
+    .filter((t) => quadrantDe(t) === "abandonner")
+    .map((t) => t.id);
+  if (!ids.length) return;
+  boutonPurge.disabled = true;
+  for (const el of calque.children) {
+    if (ids.includes(el.dataset.id)) el.classList.add("purgee");
+  }
+  setTimeout(() => {
+    taches = taches.filter((t) => !ids.includes(t.id));
+    if (ids.includes(idEnEdition)) reinitialiserFormulaire();
+    sauvegarder();
+    render();
+  }, 470);
+});
+
 window.addEventListener("resize", renderMatrice);
 
 render();

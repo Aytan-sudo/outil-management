@@ -31,23 +31,23 @@
 
 .quadrant { position: absolute; width: 50%; height: 50%; }
 .quadrant.q-planifier  { top: 0; left: 0;
-  background: color-mix(in srgb, var(--q-planifier) 5%, transparent); }
+  background: color-mix(in srgb, var(--q-planifier) 13%, transparent); }
 .quadrant.q-faire      { top: 0; right: 0;
-  background: color-mix(in srgb, var(--q-faire) 5%, transparent); }
+  background: color-mix(in srgb, var(--q-faire) 13%, transparent); }
 .quadrant.q-abandonner { bottom: 0; left: 0;
-  background: color-mix(in srgb, var(--q-abandonner) 5%, transparent); }
+  background: color-mix(in srgb, var(--q-abandonner) 11%, transparent); }
 .quadrant.q-deleguer   { bottom: 0; right: 0;
-  background: color-mix(in srgb, var(--q-deleguer) 7%, transparent); }
+  background: color-mix(in srgb, var(--q-deleguer) 17%, transparent); }
 
 .etiquette {
   position: absolute;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   line-height: 1.25;
 }
 .etiquette small {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 400;
   color: var(--texte-secondaire);
 }
@@ -85,7 +85,28 @@
   pointer-events: none;
 }
 
-.calque-vignettes { position: absolute; inset: 0; }
+.calque-vignettes { position: absolute; inset: 0; pointer-events: none; }
+.calque-vignettes .vignette { pointer-events: auto; }
+
+.bouton-purge {
+  position: absolute;
+  left: 0.9rem;
+  bottom: 3.9rem;
+  border: 1px solid var(--bordure);
+  background: var(--carte);
+  color: var(--texte-secondaire);
+  border-radius: 8px;
+  padding: 0.3rem 0.6rem;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.bouton-purge:hover:not(:disabled) {
+  background: var(--q-faire);
+  border-color: var(--q-faire);
+  color: white;
+}
+.bouton-purge:disabled { opacity: 0.4; cursor: default; }
 
 /* --- Vignettes --- */
 
@@ -108,6 +129,12 @@
 .vignette.q-planifier  { border-left-color: var(--q-planifier); }
 .vignette.q-deleguer   { border-left-color: var(--q-deleguer); }
 .vignette.q-abandonner { border-left-color: var(--q-abandonner); }
+
+.vignette.purgee {
+  transition: transform 0.45s ease, opacity 0.45s ease;
+  transform: translate(-50%, -50%) scale(0) rotate(25deg);
+  opacity: 0;
+}
 
 .vignette.en-cours {
   cursor: grabbing;
@@ -242,5 +269,7 @@
   }
   .matrice { height: auto; aspect-ratio: 1; }
   .vignette { width: 104px; }
+  .etiquette { font-size: 0.95rem; }
   .etiquette small { display: none; }
+  .bouton-purge { bottom: 2.6rem; }
 }
