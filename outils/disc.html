@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil DISC</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/disc.css">
+</head>
+<body>
+  <header class="outil-entete">
+    <a class="retour" href="../index.html">← Accueil</a>
+    <h1>Profil DISC</h1>
+  </header>
+
+  <main class="disc-layout">
+    <section class="carte-section zone-disque">
+      <svg id="disque" viewBox="0 0 480 520" role="img"
+        aria-label="Disque DISC avec les personnes positionnées selon leurs scores">
+        <text class="legende-axe" x="240" y="24" text-anchor="middle">Actif · extraverti</text>
+        <text class="legende-axe" x="240" y="512" text-anchor="middle">Réfléchi · réservé</text>
+        <text class="legende-axe" x="16" y="260" text-anchor="middle"
+          transform="rotate(-90 16 260)">Orienté tâches</text>
+        <text class="legende-axe" x="464" y="260" text-anchor="middle"
+          transform="rotate(90 464 260)">Orienté relations</text>
+
+        <path class="quart quart-d" d="M240,260 L45,260 A195,195 0 0 1 240,65 Z"></path>
+        <path class="quart quart-i" d="M240,260 L240,65 A195,195 0 0 1 435,260 Z"></path>
+        <path class="quart quart-s" d="M240,260 L435,260 A195,195 0 0 1 240,455 Z"></path>
+        <path class="quart quart-c" d="M240,260 L240,455 A195,195 0 0 1 45,260 Z"></path>
+
+        <line class="axe-svg" x1="45" y1="260" x2="435" y2="260"></line>
+        <line class="axe-svg" x1="240" y1="65" x2="240" y2="455"></line>
+
+        <text class="lettre lettre-d" x="130" y="165" text-anchor="middle">D</text>
+        <text class="lettre lettre-i" x="350" y="165" text-anchor="middle">I</text>
+        <text class="lettre lettre-s" x="350" y="380" text-anchor="middle">S</text>
+        <text class="lettre lettre-c" x="130" y="380" text-anchor="middle">C</text>
+
+        <g id="calque-personnes"></g>
+      </svg>
+
+      <ul class="legende-disc">
+        <li><span class="point point-d"></span><strong>D — Dominance</strong> : direct, exigeant, orienté résultats.</li>
+        <li><span class="point point-i"></span><strong>I — Influence</strong> : enthousiaste, communicant, entraîne les autres.</li>
+        <li><span class="point point-s"></span><strong>S — Stabilité</strong> : calme, loyal, coopératif, régulier.</li>
+        <li><span class="point point-c"></span><strong>C — Conformité</strong> : précis, analytique, attaché aux règles.</li>
+      </ul>
+    </section>
+
+    <aside class="zone-personnes">
+      <form id="formulaire-personne" class="carte-section formulaire-personne">
+        <h2 id="titre-formulaire">Nouvelle personne</h2>
+        <input type="text" id="champ-nom" placeholder="Prénom ou nom" required maxlength="40" autocomplete="off">
+        <label class="ligne-score">D
+          <input type="range" id="champ-d" min="0" max="100" value="50">
+          <output id="valeur-d">50</output>
+        </label>
+        <label class="ligne-score">I
+          <input type="range" id="champ-i" min="0" max="100" value="50">
+          <output id="valeur-i">50</output>
+        </label>
+        <label class="ligne-score">S
+          <input type="range" id="champ-s" min="0" max="100" value="50">
+          <output id="valeur-s">50</output>
+        </label>
+        <label class="ligne-score">C
+          <input type="range" id="champ-c" min="0" max="100" value="50">
+          <output id="valeur-c">50</output>
+        </label>
+        <div class="actions-formulaire">
+          <button type="submit" id="bouton-valider">Ajouter</button>
+          <button type="button" id="bouton-annuler" class="secondaire" hidden>Annuler</button>
+        </div>
+      </form>
+
+      <ul id="liste-personnes" class="liste-personnes"></ul>
+    </aside>
+  </main>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/disc.js"></script>
+</body>
+</html>

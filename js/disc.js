@@ -1,0 +1,197 @@
+/*
+ * Profil DISC : des personnes avec un score par axe (0–100), positionnées
+ * sur le disque. La position se déduit des quatre scores :
+ *   horizontal = orientation relations (I+S) vs tâches (D+C)
+ *   vertical   = énergie active (D+I) vs réservée (S+C)
+ */
+
+const CLE = "disc";
+const CENTRE_X = 240;
+const CENTRE_Y = 260;
+const RAYON = 195;
+
+const DIMENSIONS = ["d", "i", "s", "c"];
+
+let personnes = Storage.charger(CLE, []);
+let idEnEdition = null;
+
+const calque = document.getElementById("calque-personnes");
+const listePersonnes = document.getElementById("liste-personnes");
+const formulaire = document.getElementById("formulaire-personne");
+const champNom = document.getElementById("champ-nom");
+const titreFormulaire = document.getElementById("titre-formulaire");
+const boutonValider = document.getElementById("bouton-valider");
+const boutonAnnuler = document.getElementById("bouton-annuler");
+const champs = {};
+const sorties = {};
+for (const dim of DIMENSIONS) {
+  champs[dim] = document.getElementById("champ-" + dim);
+  sorties[dim] = document.getElementById("valeur-" + dim);
+}
+
+function sauvegarder() { Storage.sauvegarder(CLE, personnes); }
+
+function nouvelId() {
+  return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function dominante(p) {
+  return DIMENSIONS.reduce((meilleure, dim) =>
+    p[dim] > p[meilleure] ? dim : meilleure
+  );
+}
+
+/* Position sur le disque, bornée à l'intérieur du cercle. */
+function position(p) {
+  let x = (p.i + p.s - p.d - p.c) / 200;
+  let y = (p.d + p.i - p.s - p.c) / 200;
+  const r = Math.hypot(x, y);
+  const rMax = 0.88;
+  if (r > rMax) {
+    x = (x / r) * rMax;
+    y = (y / r) * rMax;
+  }
+  return {
+    x: CENTRE_X + x * RAYON,
+    y: CENTRE_Y - y * RAYON,
+  };
+}
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+const COULEURS = { d: "#d03b3b", i: "#eda100", s: "#1baf7a", c: "#2a78d6" };
+
+function render() {
+  renderDisque();
+  renderListe();
+}
+
+function renderDisque() {
+  calque.innerHTML = "";
+  for (const p of personnes) {
+    const { x, y } = position(p);
+    const groupe = document.createElementNS(SVG_NS, "g");
+    groupe.setAttribute("class", "personne");
+
+    const cercle = document.createElementNS(SVG_NS, "circle");
+    cercle.setAttribute("cx", x);
+    cercle.setAttribute("cy", y);
+    cercle.setAttribute("r", 9);
+    cercle.setAttribute("fill", COULEURS[dominante(p)]);
+
+    const texte = document.createElementNS(SVG_NS, "text");
+    texte.setAttribute("x", x);
+    texte.setAttribute("y", y + 24);
+    texte.setAttribute("text-anchor", "middle");
+    texte.textContent = p.nom;
+
+    groupe.append(cercle, texte);
+    groupe.addEventListener("click", () => editerPersonne(p.id));
+    calque.appendChild(groupe);
+  }
+}
+
+function texteScores(p) {
+  return "D " + p.d + " · I " + p.i + " · S " + p.s + " · C " + p.c;
+}
+
+function renderListe() {
+  listePersonnes.innerHTML = "";
+  for (const p of personnes) {
+    const li = document.createElement("li");
+    li.className = "personne-ligne";
+
+    const dim = dominante(p);
+    const badge = document.createElement("span");
+    badge.className = "badge-dim dim-" + dim;
+    badge.textContent = dim.toUpperCase();
+    badge.title = "Dimension dominante";
+
+    const corps = document.createElement("span");
+    corps.className = "personne-corps";
+    const nom = document.createElement("span");
+    nom.className = "personne-nom";
+    nom.textContent = p.nom;
+    const scores = document.createElement("span");
+    scores.className = "personne-scores";
+    scores.textContent = texteScores(p);
+    corps.append(nom, scores);
+
+    const boutonEditer = document.createElement("button");
+    boutonEditer.type = "button";
+    boutonEditer.textContent = "✎";
+    boutonEditer.title = "Modifier";
+    boutonEditer.addEventListener("click", () => editerPersonne(p.id));
+
+    const boutonSupprimer = document.createElement("button");
+    boutonSupprimer.type = "button";
+    boutonSupprimer.textContent = "✕";
+    boutonSupprimer.title = "Supprimer";
+    boutonSupprimer.addEventListener("click", () => {
+      if (confirm("Supprimer « " + p.nom + " » ?")) {
+        personnes = personnes.filter((x) => x.id !== p.id);
+        if (idEnEdition === p.id) reinitialiserFormulaire();
+        sauvegarder();
+        render();
+      }
+    });
+
+    li.append(badge, corps, boutonEditer, boutonSupprimer);
+    listePersonnes.appendChild(li);
+  }
+}
+
+/* --- Formulaire --- */
+
+function editerPersonne(id) {
+  const p = personnes.find((x) => x.id === id);
+  if (!p) return;
+  idEnEdition = id;
+  champNom.value = p.nom;
+  for (const dim of DIMENSIONS) {
+    champs[dim].value = p[dim];
+    sorties[dim].textContent = p[dim];
+  }
+  titreFormulaire.textContent = "Modifier « " + p.nom + " »";
+  boutonValider.textContent = "Enregistrer";
+  boutonAnnuler.hidden = false;
+  champNom.focus();
+  formulaire.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function reinitialiserFormulaire() {
+  idEnEdition = null;
+  formulaire.reset();
+  for (const dim of DIMENSIONS) {
+    sorties[dim].textContent = champs[dim].value;
+  }
+  titreFormulaire.textContent = "Nouvelle personne";
+  boutonValider.textContent = "Ajouter";
+  boutonAnnuler.hidden = true;
+}
+
+for (const dim of DIMENSIONS) {
+  champs[dim].addEventListener("input", () => {
+    sorties[dim].textContent = champs[dim].value;
+  });
+}
+
+formulaire.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const nom = champNom.value.trim();
+  if (!nom) return;
+  const valeurs = {};
+  for (const dim of DIMENSIONS) valeurs[dim] = Number(champs[dim].value);
+  if (idEnEdition) {
+    const p = personnes.find((x) => x.id === idEnEdition);
+    if (p) Object.assign(p, { nom }, valeurs);
+  } else {
+    personnes.push(Object.assign({ id: nouvelId(), nom }, valeurs));
+  }
+  sauvegarder();
+  reinitialiserFormulaire();
+  render();
+});
+
+boutonAnnuler.addEventListener("click", reinitialiserFormulaire);
+
+render();
