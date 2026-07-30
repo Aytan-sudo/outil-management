@@ -187,3 +187,10 @@ body.accueil {
   color: var(--texte-secondaire);
   font-size: 0.85rem;
 }
+
+.accueil-pied .signature {
+  display: block;
+  margin-top: 0.4rem;
+  font-weight: 500;
+  color: var(--texte);
+}
