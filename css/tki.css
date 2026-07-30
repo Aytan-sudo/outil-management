@@ -1,0 +1,152 @@
+.tki-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "scores situation"
+    "carte carte";
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.zone-scores { grid-area: scores; }
+.zone-situation { grid-area: situation; }
+.zone-carte { grid-area: carte; }
+
+/* --- Saisie des scores --- */
+
+.ligne-score {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr 2rem;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  padding: 0.35rem 0;
+}
+
+.ligne-score input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.ligne-score output {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--texte-secondaire);
+}
+
+.profil-tki { margin-bottom: 0; }
+.profil-tki strong { color: var(--texte); }
+
+/* --- Assistant de situation --- */
+
+.zone-situation fieldset {
+  border: none;
+  margin: 0 0 0.9rem;
+  padding: 0;
+}
+
+.zone-situation legend {
+  font-size: 0.85rem;
+  color: var(--texte-secondaire);
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+
+.pilules { display: flex; gap: 0.5rem; }
+.pilules label { flex: 1; position: relative; }
+
+.pilules input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pilules span {
+  display: block;
+  text-align: center;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid var(--bordure);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  background: var(--carte);
+  white-space: nowrap;
+}
+
+.pilules input:checked + span {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.pilules input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.resultat {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.resultat h3 { margin: 0 0 0.4rem; font-size: 1.05rem; color: var(--accent); }
+.resultat p { margin: 0 0 0.4rem; font-size: 0.9rem; }
+.resultat p:last-child { margin-bottom: 0; }
+
+/* --- Carte des modes --- */
+
+#carte-modes {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.axe-svg { stroke: #c3c2b7; stroke-width: 1; }
+.etiquette-axe { fill: #898781; font-size: 12px; }
+
+.mode circle {
+  fill: #898781;
+  stroke: var(--carte);
+  stroke-width: 2;
+}
+.mode text { fill: var(--texte); font-size: 13px; }
+
+.mode.recommande circle { fill: var(--accent); r: 12px; }
+.mode.recommande text { fill: var(--accent); font-weight: 700; }
+
+.mode.dominant circle {
+  stroke: var(--texte);
+  stroke-dasharray: 3 2;
+  stroke-width: 1.5;
+}
+
+.legende-carte { text-align: center; }
+
+.legende-modes {
+  margin: 0.75rem 0 0;
+  padding-left: 1.2rem;
+  font-size: 0.85rem;
+  color: var(--texte-secondaire);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 1.5rem;
+}
+.legende-modes strong { color: var(--texte); }
+
+/* --- Mobile --- */
+
+@media (max-width: 820px) {
+  .tki-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas: "scores" "situation" "carte";
+  }
+  .ligne-score { grid-template-columns: 8rem 1fr 2rem; }
+  .legende-modes { grid-template-columns: 1fr; }
+}

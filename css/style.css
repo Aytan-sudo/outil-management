@@ -39,6 +39,24 @@ body {
   white-space: nowrap;
 }
 
+/* Carte de section réutilisée par les pages d'outils */
+.carte-section {
+  background: var(--carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+  padding: 1.25rem;
+}
+
+.carte-section h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+.note {
+  font-size: 0.85rem;
+  color: var(--texte-secondaire);
+}
+
 .accueil-entete {
   text-align: center;
   padding: 3rem 1rem 1.5rem;

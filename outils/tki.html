@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modèle TKI</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/tki.css">
+</head>
+<body>
+  <header class="outil-entete">
+    <a class="retour" href="../index.html">← Accueil</a>
+    <h1>Modèle TKI — gestion des conflits</h1>
+  </header>
+
+  <main class="tki-layout">
+    <section class="carte-section zone-scores">
+      <h2>Mes scores TKI</h2>
+      <p class="note">Reportez les scores de votre questionnaire (0 à 12 par mode).</p>
+
+      <label class="ligne-score">Compétition
+        <input type="range" id="score-competition" min="0" max="12" value="0">
+        <output id="sortie-competition">0</output>
+      </label>
+      <label class="ligne-score">Collaboration
+        <input type="range" id="score-collaboration" min="0" max="12" value="0">
+        <output id="sortie-collaboration">0</output>
+      </label>
+      <label class="ligne-score">Compromis
+        <input type="range" id="score-compromis" min="0" max="12" value="0">
+        <output id="sortie-compromis">0</output>
+      </label>
+      <label class="ligne-score">Évitement
+        <input type="range" id="score-evitement" min="0" max="12" value="0">
+        <output id="sortie-evitement">0</output>
+      </label>
+      <label class="ligne-score">Accommodation
+        <input type="range" id="score-accommodation" min="0" max="12" value="0">
+        <output id="sortie-accommodation">0</output>
+      </label>
+
+      <p id="profil-tki" class="note profil-tki"></p>
+    </section>
+
+    <section class="carte-section zone-situation">
+      <h2>Face à une situation</h2>
+
+      <fieldset>
+        <legend>L'enjeu pour vous</legend>
+        <div class="pilules">
+          <label><input type="radio" name="enjeu" value="fort"><span>Fort</span></label>
+          <label><input type="radio" name="enjeu" value="faible"><span>Faible / secondaire</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>La relation avec l'autre partie</legend>
+        <div class="pilules">
+          <label><input type="radio" name="relation" value="forte"><span>Importante</span></label>
+          <label><input type="radio" name="relation" value="secondaire"><span>Secondaire</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Le temps disponible</legend>
+        <div class="pilules">
+          <label><input type="radio" name="temps" value="urgent"><span>C'est urgent</span></label>
+          <label><input type="radio" name="temps" value="temps"><span>On a le temps</span></label>
+        </div>
+      </fieldset>
+
+      <div class="resultat">
+        <h3 id="resultat-mode"></h3>
+        <p id="resultat-explication"></p>
+        <p id="resultat-note" class="note"></p>
+      </div>
+    </section>
+
+    <section class="carte-section zone-carte">
+      <h2>Les cinq modes</h2>
+      <svg id="carte-modes" viewBox="0 0 420 300" role="img"
+        aria-label="Carte des cinq modes TKI selon l'assertivité et la coopération">
+        <line class="axe-svg" x1="42" y1="20" x2="42" y2="262"></line>
+        <line class="axe-svg" x1="42" y1="262" x2="405" y2="262"></line>
+        <text class="etiquette-axe" x="223" y="290" text-anchor="middle">Coopération →</text>
+        <text class="etiquette-axe" x="16" y="141" text-anchor="middle"
+          transform="rotate(-90 16 141)">Assertivité →</text>
+
+        <g class="mode" id="mode-competition">
+          <circle cx="115" cy="70" r="10"></circle>
+          <text x="115" y="46" text-anchor="middle">Compétition</text>
+        </g>
+        <g class="mode" id="mode-collaboration">
+          <circle cx="330" cy="70" r="10"></circle>
+          <text x="330" y="46" text-anchor="middle">Collaboration</text>
+        </g>
+        <g class="mode" id="mode-compromis">
+          <circle cx="222" cy="160" r="10"></circle>
+          <text x="222" y="136" text-anchor="middle">Compromis</text>
+        </g>
+        <g class="mode" id="mode-evitement">
+          <circle cx="115" cy="235" r="10"></circle>
+          <text x="115" y="211" text-anchor="middle">Évitement</text>
+        </g>
+        <g class="mode" id="mode-accommodation">
+          <circle cx="330" cy="235" r="10"></circle>
+          <text x="330" y="211" text-anchor="middle">Accommodation</text>
+        </g>
+      </svg>
+      <p class="note legende-carte">● plein = mode conseillé pour la situation ·
+        ◌ pointillé = votre mode dominant d'après vos scores</p>
+
+      <ul class="legende-modes">
+        <li><strong>Compétition</strong> — imposer sa solution ; utile quand l'enjeu prime et qu'il faut trancher.</li>
+        <li><strong>Collaboration</strong> — construire un gagnant-gagnant ; demande du temps et de la confiance.</li>
+        <li><strong>Compromis</strong> — un accord acceptable pour chacun, rapidement.</li>
+        <li><strong>Évitement</strong> — ne pas engager le conflit ; rationnel sur un problème secondaire.</li>
+        <li><strong>Accommodation</strong> — céder ; un investissement dans la relation quand l'enjeu est faible pour vous.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/tki.js"></script>
+</body>
+</html>
