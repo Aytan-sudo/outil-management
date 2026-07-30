@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrice d'Eisenhower</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/eisenhower.css">
+</head>
+<body>
+  <header class="outil-entete">
+    <a class="retour" href="../index.html">← Accueil</a>
+    <h1>Matrice d'Eisenhower</h1>
+  </header>
+
+  <main class="eisenhower-layout">
+    <section class="zone-matrice">
+      <div class="matrice" id="matrice">
+        <div class="quadrant q-planifier">
+          <span class="etiquette">Planifier<small>important, non urgent</small></span>
+        </div>
+        <div class="quadrant q-faire">
+          <span class="etiquette">Faire<small>important et urgent</small></span>
+        </div>
+        <div class="quadrant q-abandonner">
+          <span class="etiquette">Abandonner<small>ni important, ni urgent</small></span>
+        </div>
+        <div class="quadrant q-deleguer">
+          <span class="etiquette">Déléguer<small>urgent, non important</small></span>
+        </div>
+        <div class="ligne ligne-verticale"></div>
+        <div class="ligne ligne-horizontale"></div>
+        <span class="axe axe-urgence">Urgence →</span>
+        <span class="axe axe-importance">Importance →</span>
+        <p id="matrice-vide" class="matrice-vide">Ajoutez une tâche : elle apparaîtra ici,
+          placée selon ses scores. Glissez-la pour ajuster.</p>
+        <div id="calque-vignettes" class="calque-vignettes"></div>
+      </div>
+    </section>
+
+    <aside class="zone-liste">
+      <form id="formulaire-tache" class="formulaire-tache">
+        <h2 id="titre-formulaire">Nouvelle tâche</h2>
+        <input type="text" id="champ-titre" placeholder="Intitulé de la tâche" required maxlength="80" autocomplete="off">
+        <label>Importance : <output id="valeur-importance">10</output>/20
+          <input type="range" id="champ-importance" min="0" max="20" value="10">
+        </label>
+        <label>Urgence : <output id="valeur-urgence">10</output>/20
+          <input type="range" id="champ-urgence" min="0" max="20" value="10">
+        </label>
+        <div class="actions-formulaire">
+          <button type="submit" id="bouton-valider">Ajouter</button>
+          <button type="button" id="bouton-annuler" class="secondaire" hidden>Annuler</button>
+        </div>
+      </form>
+
+      <ul id="liste-taches" class="liste-taches"></ul>
+    </aside>
+  </main>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/eisenhower.js"></script>
+</body>
+</html>

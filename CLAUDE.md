@@ -26,6 +26,7 @@ matrice des conflits par acteurs, profil DISC, drivers (messages contraignants).
 index.html        Accueil : grille de boutons vers les outils
 outils/*.html     Une page par outil
 css/style.css     Styles partagés (variables, layout, composants)
+css/<outil>.css   Styles propres à chaque outil
 js/storage.js     Accès centralisé au localStorage
 js/<outil>.js     Logique propre à chaque outil
 lib/              Bibliothèques vendorées (si besoin)

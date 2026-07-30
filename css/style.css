@@ -18,6 +18,27 @@ body {
   line-height: 1.5;
 }
 
+.outil-entete {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.5rem;
+  background: var(--carte);
+  border-bottom: 1px solid var(--bordure);
+}
+
+.outil-entete h1 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.outil-entete .retour {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
 .accueil-entete {
   text-align: center;
   padding: 3rem 1rem 1.5rem;
