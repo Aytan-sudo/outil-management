@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matrice des conflits par acteurs</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/conflits.css">
+</head>
+<body>
+  <header class="outil-entete">
+    <a class="retour" href="../index.html">← Accueil</a>
+    <h1>Matrice des conflits par acteurs</h1>
+  </header>
+
+  <main class="conflits-layout">
+    <section class="zone-matrice">
+      <div class="matrice" id="matrice">
+        <div class="quadrant q-adversaires">
+          <span class="etiquette">Adversaires<small>désaccord sur le fond, mais relation de confiance</small></span>
+        </div>
+        <div class="quadrant q-allies">
+          <span class="etiquette">Alliés<small>accord sur le fond et confiance</small></span>
+        </div>
+        <div class="quadrant q-ennemis">
+          <span class="etiquette">Ennemis<small>désaccord et défiance</small></span>
+        </div>
+        <div class="quadrant q-opportunistes">
+          <span class="etiquette">Opportunistes<small>accord affiché, confiance limitée</small></span>
+        </div>
+        <div class="ligne ligne-verticale"></div>
+        <div class="ligne ligne-horizontale"></div>
+        <span class="axe axe-accord">Accord sur le fond →</span>
+        <span class="axe axe-confiance">Confiance →</span>
+        <p id="matrice-vide" class="matrice-vide">Ajoutez un acteur : il apparaîtra ici,
+          placé selon ses scores. Glissez-le pour ajuster.</p>
+        <div id="calque-vignettes" class="calque-vignettes"></div>
+      </div>
+    </section>
+
+    <aside class="zone-liste">
+      <form id="formulaire-acteur" class="formulaire-acteur">
+        <h2 id="titre-formulaire">Nouvel acteur</h2>
+        <input type="text" id="champ-nom" placeholder="Prénom ou nom" required maxlength="40" autocomplete="off">
+        <label>Accord sur le fond : <output id="valeur-accord">10</output>/20
+          <input type="range" id="champ-accord" min="0" max="20" value="10">
+        </label>
+        <label>Confiance dans la relation : <output id="valeur-confiance">10</output>/20
+          <input type="range" id="champ-confiance" min="0" max="20" value="10">
+        </label>
+        <div class="actions-formulaire">
+          <button type="submit" id="bouton-valider">Ajouter</button>
+          <button type="button" id="bouton-annuler" class="secondaire" hidden>Annuler</button>
+        </div>
+      </form>
+
+      <ul id="liste-acteurs" class="liste-acteurs"></ul>
+
+      <div class="carte-section strategies">
+        <h2>Stratégies</h2>
+        <ul>
+          <li><span class="pastille q-allies"></span><strong>Alliés</strong> — appuyez-vous sur eux,
+            informez-les, ne les négligez pas.</li>
+          <li><span class="pastille q-adversaires"></span><strong>Adversaires</strong> — débattez sur
+            le fond : la relation est saine, négociez loyalement.</li>
+          <li><span class="pastille q-opportunistes"></span><strong>Opportunistes</strong> — clarifiez
+            les intérêts, sécurisez les accords (par écrit).</li>
+          <li><span class="pastille q-ennemis"></span><strong>Ennemis</strong> — n'alimentez pas le
+            conflit, limitez leur influence, ne cherchez pas à les convertir.</li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <script src="../js/storage.js"></script>
+  <script src="../js/conflits.js"></script>
+</body>
+</html>
