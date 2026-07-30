@@ -5,7 +5,7 @@
 Site 100 % statique (HTML/CSS/JS vanilla) qui centralise des outils d'aide au
 leadership et au management issus d'une formation. Page d'accueil avec un bouton
 par outil, chaque outil vit sur sa propre page. La spec d'origine est dans
-`projet.md`.
+`projet.md` ; les pistes d'évolution sont dans `EVOLUTIONS.md`.
 
 Les 6 outils : matrice d'Eisenhower, SMART & délégation, modèle TKI,
 matrice des conflits par acteurs, profil DISC, drivers (messages contraignants).
