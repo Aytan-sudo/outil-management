@@ -116,8 +116,17 @@
   </main>
 
   <footer class="accueil-pied">
+    <div class="actions-donnees">
+      <button type="button" id="bouton-export" class="bouton-donnees">⬇️ Exporter mes données</button>
+      <button type="button" id="bouton-import" class="bouton-donnees">⬆️ Importer une sauvegarde</button>
+      <input type="file" id="champ-import" accept=".json,application/json" hidden>
+    </div>
+    <p id="message-donnees" class="message-donnees" role="status"></p>
     🔒 Vos données restent dans ce navigateur — rien n'est envoyé sur un serveur.
+    Pensez à exporter de temps en temps&nbsp;: c'est votre sauvegarde.
     <span class="signature">Pr Cantais — CHU de Saint-Étienne</span>
   </footer>
+  <script src="js/storage.js"></script>
+  <script src="js/accueil.js"></script>
 </body>
 </html>

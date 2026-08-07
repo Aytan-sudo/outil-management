@@ -194,3 +194,39 @@ body.accueil {
   font-weight: 500;
   color: var(--texte);
 }
+
+.actions-donnees {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.bouton-donnees {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid var(--bordure);
+  border-radius: 999px;
+  background: var(--carte);
+  color: var(--texte);
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.bouton-donnees:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--bordure));
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.message-donnees {
+  min-height: 1.2em;
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  color: #1a7f4e;
+}
+
+.message-donnees.erreur {
+  color: #c2372f;
+}
