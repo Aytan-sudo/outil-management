@@ -144,6 +144,51 @@ for (const mode of Object.keys(NOMS)) {
   });
 }
 
+/* --- Auto-questionnaire ---
+   Trois affirmations par mode (0–4 chacune), total ramené sur 0–12 comme les
+   curseurs. Items originaux, entrelacés pour ne pas trahir leur mode. */
+
+const ITEMS_TKI = [
+  { cle: "competition", texte: "Quand je suis convaincu d'avoir raison, je défends ma position jusqu'au bout, même si l'échange devient tendu." },
+  { cle: "collaboration", texte: "Face à un désaccord, je cherche d'abord à comprendre les besoins réels de l'autre avant de proposer une solution." },
+  { cle: "compromis", texte: "Couper la poire en deux me semble souvent la façon la plus efficace de sortir d'un blocage." },
+  { cle: "evitement", texte: "Je laisse volontiers passer l'orage avant d'aborder un sujet qui fâche." },
+  { cle: "accommodation", texte: "Je préfère céder plutôt que d'abîmer une relation qui compte pour moi." },
+  { cle: "competition", texte: "Dans une négociation, je cherche d'abord à faire adopter ma solution." },
+  { cle: "collaboration", texte: "Je suis prêt à passer du temps pour construire une solution qui convienne vraiment aux deux parties." },
+  { cle: "compromis", texte: "Je lâche une partie de mes demandes sans difficulté si l'autre en fait autant." },
+  { cle: "evitement", texte: "Certains désaccords ne méritent tout simplement pas qu'on s'y attarde." },
+  { cle: "accommodation", texte: "Les souhaits des autres passent souvent avant les miens." },
+  { cle: "competition", texte: "Trancher vite, quitte à déplaire, ne me pose pas de problème." },
+  { cle: "collaboration", texte: "Un conflit bien mené est souvent l'occasion d'améliorer notre façon de travailler ensemble." },
+  { cle: "compromis", texte: "Un accord imparfait mais rapide vaut souvent mieux qu'une longue négociation." },
+  { cle: "evitement", texte: "Je remets volontiers une discussion difficile à plus tard." },
+  { cle: "accommodation", texte: "Pour apaiser une tension, je fais facilement le premier pas, même si j'y perds un peu." },
+];
+
+const detailsQuestionnaire = document.getElementById("questionnaire-tki");
+
+Questionnaire.monter({
+  conteneur: document.getElementById("items-tki"),
+  progres: document.getElementById("progres-tki"),
+  bouton: document.getElementById("bouton-quest-tki"),
+  items: ITEMS_TKI,
+  surValidation(totaux) {
+    for (const mode of Object.keys(NOMS)) {
+      etat.scores[mode] = totaux[mode];
+      const champ = document.getElementById("score-" + mode);
+      const sortie = document.getElementById("sortie-" + mode);
+      champ.value = totaux[mode];
+      sortie.textContent = totaux[mode];
+    }
+    sauvegarder();
+    majProfil();
+    majResultat();
+    detailsQuestionnaire.open = false;
+    profilTki.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  },
+});
+
 for (const nom of ["enjeu", "relation", "temps"]) {
   for (const radio of document.querySelectorAll('input[name="' + nom + '"]')) {
     radio.checked = radio.value === etat.situation[nom];

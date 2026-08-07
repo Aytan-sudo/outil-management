@@ -50,6 +50,21 @@
     </section>
 
     <aside class="zone-personnes">
+      <details class="carte-section questionnaire" id="questionnaire-disc">
+        <summary>📝 Auto-questionnaire — estimer un profil (≈ 4 min)</summary>
+        <p class="note">Seize affirmations, à évaluer spontanément. L'idéal est
+          de laisser la personne concernée répondre elle-même. Questions
+          originales inspirées du modèle DISC (Marston)&nbsp;: pas un test
+          validé, un support de réflexion. Les scores calculés sont reportés
+          dans le formulaire ci-dessous — il ne restera qu'à mettre le prénom
+          et enregistrer.</p>
+        <div id="items-disc"></div>
+        <div class="pied-quest">
+          <button type="button" id="bouton-quest-disc" disabled>Reporter dans le formulaire</button>
+          <span class="progres-quest" id="progres-disc"></span>
+        </div>
+      </details>
+
       <form id="formulaire-personne" class="carte-section formulaire-personne">
         <h2 id="titre-formulaire">Nouvelle personne</h2>
         <input type="text" id="champ-nom" placeholder="Prénom ou nom" required maxlength="40" autocomplete="off">
@@ -80,6 +95,7 @@
   </main>
 
   <script src="../js/storage.js"></script>
+  <script src="../js/questionnaire.js"></script>
   <script src="../js/disc.js"></script>
 </body>
 </html>

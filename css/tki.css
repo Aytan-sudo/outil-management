@@ -3,6 +3,7 @@
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
     "scores situation"
+    "quest quest"
     "carte carte";
   gap: 1rem;
   padding: 1rem;
@@ -12,6 +13,7 @@
 
 .zone-scores { grid-area: scores; }
 .zone-situation { grid-area: situation; }
+.zone-questionnaire { grid-area: quest; }
 .zone-carte { grid-area: carte; }
 
 /* --- Saisie des scores --- */
@@ -145,7 +147,7 @@
 @media (max-width: 820px) {
   .tki-layout {
     grid-template-columns: 1fr;
-    grid-template-areas: "scores" "situation" "carte";
+    grid-template-areas: "scores" "quest" "situation" "carte";
   }
   .ligne-score { grid-template-columns: 8rem 1fr 2rem; }
   .legende-modes { grid-template-columns: 1fr; }

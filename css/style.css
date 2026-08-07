@@ -60,6 +60,82 @@ body {
   color: var(--texte-secondaire);
 }
 
+/* --- Auto-questionnaires (TKI, DISC) --- */
+
+.questionnaire summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.questionnaire[open] summary { margin-bottom: 0.5rem; }
+
+.item-quest {
+  border: none;
+  margin: 0 0 0.8rem;
+  padding: 0;
+}
+.item-quest legend {
+  font-size: 0.88rem;
+  padding: 0;
+  margin-bottom: 0.35rem;
+}
+
+.pilules-likert {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.pilules-likert label { position: relative; flex: 1; }
+.pilules-likert input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.pilules-likert span {
+  display: block;
+  text-align: center;
+  padding: 0.32rem 0.45rem;
+  border: 1px solid var(--bordure);
+  border-radius: 999px;
+  background: var(--carte);
+  font-size: 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.pilules-likert input:checked + span {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+.pilules-likert input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.pied-quest {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+}
+.pied-quest button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.pied-quest button:disabled { opacity: 0.45; cursor: default; }
+
+.progres-quest {
+  font-size: 0.85rem;
+  color: var(--texte-secondaire);
+  font-variant-numeric: tabular-nums;
+}
+
 /* --- Page d'accueil --- */
 
 body.accueil {

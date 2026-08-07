@@ -194,4 +194,47 @@ formulaire.addEventListener("submit", (e) => {
 
 boutonAnnuler.addEventListener("click", reinitialiserFormulaire);
 
+/* --- Auto-questionnaire ---
+   Quatre affirmations par dimension (0–4 chacune) ; le total 0–16 est ramené
+   sur 0–100 puis reporté dans les curseurs du formulaire. Items originaux. */
+
+const ITEMS_DISC = [
+  { cle: "d", texte: "Je vais droit au but, même si cela peut paraître brusque." },
+  { cle: "i", texte: "Je convaincs plus par l'enthousiasme que par les arguments techniques." },
+  { cle: "s", texte: "Je préfère un environnement prévisible aux changements permanents." },
+  { cle: "c", texte: "Je vérifie les détails avant de valider un travail." },
+  { cle: "d", texte: "J'aime prendre les décisions et garder la main sur la situation." },
+  { cle: "i", texte: "Parler devant un groupe me donne de l'énergie." },
+  { cle: "s", texte: "On me décrit comme quelqu'un de calme et de fiable." },
+  { cle: "c", texte: "Les règles et les procédures existent pour de bonnes raisons : je les respecte." },
+  { cle: "d", texte: "Les objectifs ambitieux me stimulent plus qu'ils ne m'inquiètent." },
+  { cle: "i", texte: "Je noue facilement le contact, même avec des inconnus." },
+  { cle: "s", texte: "J'écoute longuement avant de donner mon avis." },
+  { cle: "c", texte: "J'ai besoin de données solides avant de me faire une opinion." },
+  { cle: "d", texte: "Dans un groupe qui hésite, je prends naturellement les commandes." },
+  { cle: "i", texte: "J'aime lancer des idées nouvelles et embarquer les autres avec moi." },
+  { cle: "s", texte: "Je tiens mes engagements dans la durée, sans faire de bruit." },
+  { cle: "c", texte: "Mieux vaut un travail exact rendu un peu plus tard qu'un travail approximatif rendu vite." },
+];
+
+const detailsQuestionnaire = document.getElementById("questionnaire-disc");
+
+Questionnaire.monter({
+  conteneur: document.getElementById("items-disc"),
+  progres: document.getElementById("progres-disc"),
+  bouton: document.getElementById("bouton-quest-disc"),
+  items: ITEMS_DISC,
+  surValidation(totaux) {
+    for (const dim of DIMENSIONS) {
+      const score = Math.round((totaux[dim] / 16) * 100);
+      champs[dim].value = score;
+      sorties[dim].textContent = score;
+    }
+    detailsQuestionnaire.open = false;
+    titreFormulaire.textContent = "Profil calculé — qui est-ce ?";
+    champNom.focus();
+    formulaire.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  },
+});
+
 render();

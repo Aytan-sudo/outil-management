@@ -43,6 +43,19 @@
       <p id="profil-tki" class="note profil-tki"></p>
     </section>
 
+    <details class="carte-section questionnaire zone-questionnaire" id="questionnaire-tki">
+      <summary>📝 Auto-questionnaire — estimer mes scores (≈ 3 min)</summary>
+      <p class="note">Quinze affirmations, à évaluer spontanément — il n'y a pas
+        de bonne réponse. Questions originales inspirées du modèle de
+        Thomas &amp; Kilmann&nbsp;: ce n'est ni le questionnaire TKI officiel,
+        ni un instrument psychométrique validé, juste un support de réflexion.</p>
+      <div id="items-tki"></div>
+      <div class="pied-quest">
+        <button type="button" id="bouton-quest-tki" disabled>Reporter dans mes scores</button>
+        <span class="progres-quest" id="progres-tki"></span>
+      </div>
+    </details>
+
     <section class="carte-section zone-situation">
       <h2>Face à une situation</h2>
 
@@ -122,6 +135,7 @@
   </main>
 
   <script src="../js/storage.js"></script>
+  <script src="../js/questionnaire.js"></script>
   <script src="../js/tki.js"></script>
 </body>
 </html>
