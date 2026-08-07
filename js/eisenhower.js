@@ -1,7 +1,6 @@
 /*
  * Matrice d'Eisenhower.
- * Les tâches sont positionnées dans la matrice par leurs scores
- * (x = urgence, y = importance) ; les glisser met à jour les scores.
+ * Matrice 2D (moteur commun js/matrice.js) : x = urgence, y = importance.
  * Mode 3D expérimental : troisième axe « charge de travail », cube en
  * projection orthographique (SVG maison), liste triée par priorité
  * ⚡ = urgence + importance + rapidité (20 − charge).
@@ -16,40 +15,18 @@ for (const t of taches) {
   if (typeof t.charge !== "number") t.charge = 10;
 }
 let mode3d = Storage.charger(CLE_MODE, false) === true;
-let idEnEdition = null;
-let drag = null;
 
 const matrice = document.getElementById("matrice");
-const calque = document.getElementById("calque-vignettes");
-const matriceVide = document.getElementById("matrice-vide");
 const listeTaches = document.getElementById("liste-taches");
-const formulaire = document.getElementById("formulaire-tache");
-const champTitre = document.getElementById("champ-titre");
-const champImportance = document.getElementById("champ-importance");
-const champUrgence = document.getElementById("champ-urgence");
-const champCharge = document.getElementById("champ-charge");
-const valeurImportance = document.getElementById("valeur-importance");
-const valeurUrgence = document.getElementById("valeur-urgence");
-const valeurCharge = document.getElementById("valeur-charge");
-const ligneCharge = document.getElementById("ligne-charge");
-const titreFormulaire = document.getElementById("titre-formulaire");
-const boutonValider = document.getElementById("bouton-valider");
-const boutonAnnuler = document.getElementById("bouton-annuler");
 const boutonPurge = document.getElementById("bouton-purge");
 const boutonMode3d = document.getElementById("bouton-mode3d");
 const scene3d = document.getElementById("scene3d");
 const cube3d = document.getElementById("cube3d");
 const cubeVide = document.getElementById("cube-vide");
+const ligneCharge = document.getElementById("ligne-charge");
 const noteTri = document.getElementById("note-tri");
 
-/* Marges pour que les vignettes (centrées sur leur point) restent lisibles
-   dans la matrice, y compris aux scores extrêmes. */
-function margeX() { return matrice.clientWidth < 500 ? 58 : 72; }
-function margeY() { return 32; }
-
 function sauvegarder() { Storage.sauvegarder(CLE, taches); }
-
-function borner(v) { return Math.min(20, Math.max(0, v)); }
 
 function quadrantDe(t) {
   if (t.importance >= SEUIL) return t.urgence >= SEUIL ? "faire" : "planifier";
@@ -62,31 +39,6 @@ function priorite(t) {
   return t.urgence + t.importance + (20 - t.charge);
 }
 
-function nouvelId() {
-  return "t" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-}
-
-/* --- Rendu --- */
-
-function render() {
-  if (mode3d) renderCube();
-  else renderMatrice();
-  renderListe();
-}
-
-function positionner(el, t) {
-  const l = matrice.clientWidth;
-  const h = matrice.clientHeight;
-  const mx = margeX();
-  const my = margeY();
-  el.style.left = mx + (t.urgence / 20) * (l - 2 * mx) + "px";
-  el.style.top = h - my - (t.importance / 20) * (h - 2 * my) + "px";
-}
-
-function classesVignette(t) {
-  return "vignette q-" + quadrantDe(t) + (t.faite ? " faite" : "");
-}
-
 function texteScores(t) {
   const base = "I " + Math.round(t.importance) + " · U " + Math.round(t.urgence);
   if (!mode3d) return base;
@@ -94,32 +46,35 @@ function texteScores(t) {
     " · C " + Math.round(t.charge);
 }
 
-function renderMatrice() {
-  calque.innerHTML = "";
-  matriceVide.hidden = taches.length > 0;
-  for (const t of taches) {
-    const v = document.createElement("div");
-    v.className = classesVignette(t);
-    v.dataset.id = t.id;
+/* --- Rendu --- */
 
-    const titre = document.createElement("span");
-    titre.className = "vignette-titre";
-    titre.textContent = t.titre;
-    const scores = document.createElement("span");
-    scores.className = "vignette-scores";
-    scores.textContent = texteScores(t);
-
-    v.append(titre, scores);
-    positionner(v, t);
-    v.addEventListener("pointerdown", surPointerDown);
-    calque.appendChild(v);
-  }
-
-  const nbAbandon = taches.filter((t) => quadrantDe(t) === "abandonner").length;
-  boutonPurge.disabled = nbAbandon === 0;
-  boutonPurge.textContent =
-    "🗑 Tout supprimer" + (nbAbandon ? " (" + nbAbandon + ")" : "");
+function render() {
+  if (mode3d) renderCube();
+  else matrice2d.render();
+  renderListe();
 }
+
+const matrice2d = creerMatrice({
+  matrice,
+  calque: document.getElementById("calque-vignettes"),
+  matriceVide: document.getElementById("matrice-vide"),
+  proprieteX: "urgence",
+  proprieteY: "importance",
+  margeEtroite: 58,
+  margeLarge: 72,
+  objets: () => taches,
+  classeVignette: (t) => "vignette q-" + quadrantDe(t) + (t.faite ? " faite" : ""),
+  titreVignette: (t) => t.titre,
+  texteScores,
+  surDepot() { sauvegarder(); render(); },
+  surClic(t) { editeur.editer(t); },
+  apresRendu() {
+    const nbAbandon = taches.filter((t) => quadrantDe(t) === "abandonner").length;
+    boutonPurge.disabled = nbAbandon === 0;
+    boutonPurge.textContent =
+      "🗑 Tout supprimer" + (nbAbandon ? " (" + nbAbandon + ")" : "");
+  },
+});
 
 function renderListe() {
   listeTaches.innerHTML = "";
@@ -131,7 +86,7 @@ function renderListe() {
   );
   for (const t of triees) {
     const li = document.createElement("li");
-    li.className = "tache" + (t.faite ? " faite" : "");
+    li.className = "ligne-fiche tache" + (t.faite ? " faite" : "");
 
     const caseFaite = document.createElement("input");
     caseFaite.type = "checkbox";
@@ -143,42 +98,70 @@ function renderListe() {
       render();
     });
 
-    const pastille = document.createElement("span");
-    pastille.className = "pastille q-" + quadrantDe(t);
-
-    const corps = document.createElement("span");
-    corps.className = "tache-corps";
-    const titre = document.createElement("span");
-    titre.className = "tache-titre";
-    titre.textContent = t.titre;
-    const scores = document.createElement("span");
-    scores.className = "tache-scores";
-    scores.textContent = texteScores(t);
-    corps.append(titre, scores);
-
-    const boutonEditer = document.createElement("button");
-    boutonEditer.type = "button";
-    boutonEditer.textContent = "✎";
-    boutonEditer.title = "Modifier";
-    boutonEditer.addEventListener("click", () => editerTache(t.id));
-
-    const boutonSupprimer = document.createElement("button");
-    boutonSupprimer.type = "button";
-    boutonSupprimer.textContent = "✕";
-    boutonSupprimer.title = "Supprimer";
-    boutonSupprimer.addEventListener("click", () => {
-      if (confirm("Supprimer « " + t.titre + " » ?")) {
+    li.append(
+      caseFaite,
+      elementPastille("q-" + quadrantDe(t)),
+      corpsFiche(t.titre, texteScores(t)),
+      boutonIcone("✎", "Modifier", () => editeur.editer(t)),
+      boutonIcone("✕", "Supprimer", confirmerSuppression(t.titre, () => {
         taches = taches.filter((x) => x.id !== t.id);
-        if (idEnEdition === t.id) reinitialiserFormulaire();
+        editeur.annulerEditionDe(t.id);
         sauvegarder();
         render();
-      }
-    });
-
-    li.append(caseFaite, pastille, corps, boutonEditer, boutonSupprimer);
+      }))
+    );
     listeTaches.appendChild(li);
   }
 }
+
+/* --- Formulaire --- */
+
+const editeur = creerEditeur({
+  formulaire: document.getElementById("formulaire-tache"),
+  titreFormulaire: document.getElementById("titre-formulaire"),
+  boutonValider: document.getElementById("bouton-valider"),
+  boutonAnnuler: document.getElementById("bouton-annuler"),
+  champTexte: document.getElementById("champ-titre"),
+  proprieteTexte: "titre",
+  curseurs: [
+    { champ: document.getElementById("champ-importance"),
+      sortie: document.getElementById("valeur-importance"), propriete: "importance" },
+    { champ: document.getElementById("champ-urgence"),
+      sortie: document.getElementById("valeur-urgence"), propriete: "urgence" },
+    { champ: document.getElementById("champ-charge"),
+      sortie: document.getElementById("valeur-charge"), propriete: "charge" },
+  ],
+  libelleNouveau: "Nouvelle tâche",
+  libelleModifier: () => "Modifier la tâche",
+  surValidation(valeurs, idEnEdition) {
+    if (idEnEdition) {
+      const t = taches.find((x) => x.id === idEnEdition);
+      if (t) Object.assign(t, valeurs);
+    } else {
+      taches.push(Object.assign({ id: nouvelId("t"), faite: false }, valeurs));
+    }
+    sauvegarder();
+    render();
+  },
+});
+
+/* Purge du quadrant « Abandonner » : les vignettes s'évaporent, puis on supprime. */
+boutonPurge.addEventListener("click", () => {
+  const ids = taches
+    .filter((t) => quadrantDe(t) === "abandonner")
+    .map((t) => t.id);
+  if (!ids.length) return;
+  boutonPurge.disabled = true;
+  for (const el of document.getElementById("calque-vignettes").children) {
+    if (ids.includes(el.dataset.id)) el.classList.add("purgee");
+  }
+  setTimeout(() => {
+    taches = taches.filter((t) => !ids.includes(t.id));
+    if (ids.includes(editeur.idEnEdition)) editeur.reinitialiser();
+    sauvegarder();
+    render();
+  }, 470);
+});
 
 /* --- Mode 3D : cube en projection orthographique --- */
 
@@ -309,7 +292,7 @@ function renderCube() {
     groupe.appendChild(etiquette);
     /* stopPropagation : ne pas déclencher la rotation du cube. */
     groupe.addEventListener("pointerdown", (e) => e.stopPropagation());
-    groupe.addEventListener("click", () => editerTache(t.id));
+    groupe.addEventListener("click", () => editeur.editer(t));
     cube3d.appendChild(groupe);
   }
 }
@@ -355,138 +338,6 @@ boutonMode3d.addEventListener("click", () => {
   mode3d = !mode3d;
   Storage.sauvegarder(CLE_MODE, mode3d);
   appliquerMode();
-});
-
-/* --- Glisser-déposer 2D (pointer events : souris et tactile) --- */
-
-function surPointerDown(e) {
-  const el = e.currentTarget;
-  const t = taches.find((x) => x.id === el.dataset.id);
-  if (!t) return;
-  drag = { el, t, x0: e.clientX, y0: e.clientY, deplace: false };
-  el.setPointerCapture(e.pointerId);
-  el.addEventListener("pointermove", surPointerMove);
-  el.addEventListener("pointerup", surPointerUp);
-  el.addEventListener("pointercancel", surPointerUp);
-  e.preventDefault();
-}
-
-function surPointerMove(e) {
-  if (!drag) return;
-  if (!drag.deplace) {
-    if (Math.abs(e.clientX - drag.x0) + Math.abs(e.clientY - drag.y0) < 5) return;
-    drag.deplace = true;
-    drag.el.classList.add("en-cours");
-  }
-  const r = matrice.getBoundingClientRect();
-  const mx = margeX();
-  const my = margeY();
-  drag.t.urgence = borner(((e.clientX - r.left - mx) / (r.width - 2 * mx)) * 20);
-  drag.t.importance = borner(((r.height - my - (e.clientY - r.top)) / (r.height - 2 * my)) * 20);
-  positionner(drag.el, drag.t);
-  drag.el.className = classesVignette(drag.t) + " en-cours";
-  drag.el.querySelector(".vignette-scores").textContent = texteScores(drag.t);
-}
-
-function surPointerUp() {
-  if (!drag) return;
-  const { el, t, deplace } = drag;
-  el.classList.remove("en-cours");
-  el.removeEventListener("pointermove", surPointerMove);
-  el.removeEventListener("pointerup", surPointerUp);
-  el.removeEventListener("pointercancel", surPointerUp);
-  drag = null;
-  if (deplace) {
-    t.importance = Math.round(t.importance);
-    t.urgence = Math.round(t.urgence);
-    sauvegarder();
-    render();
-  } else {
-    editerTache(t.id);
-  }
-}
-
-/* --- Formulaire --- */
-
-function editerTache(id) {
-  const t = taches.find((x) => x.id === id);
-  if (!t) return;
-  idEnEdition = id;
-  champTitre.value = t.titre;
-  champImportance.value = t.importance;
-  champUrgence.value = t.urgence;
-  champCharge.value = t.charge;
-  valeurImportance.textContent = t.importance;
-  valeurUrgence.textContent = t.urgence;
-  valeurCharge.textContent = t.charge;
-  titreFormulaire.textContent = "Modifier la tâche";
-  boutonValider.textContent = "Enregistrer";
-  boutonAnnuler.hidden = false;
-  champTitre.focus();
-  formulaire.scrollIntoView({ behavior: "smooth", block: "nearest" });
-}
-
-function reinitialiserFormulaire() {
-  idEnEdition = null;
-  formulaire.reset();
-  valeurImportance.textContent = champImportance.value;
-  valeurUrgence.textContent = champUrgence.value;
-  valeurCharge.textContent = champCharge.value;
-  titreFormulaire.textContent = "Nouvelle tâche";
-  boutonValider.textContent = "Ajouter";
-  boutonAnnuler.hidden = true;
-}
-
-champImportance.addEventListener("input", () => {
-  valeurImportance.textContent = champImportance.value;
-});
-champUrgence.addEventListener("input", () => {
-  valeurUrgence.textContent = champUrgence.value;
-});
-champCharge.addEventListener("input", () => {
-  valeurCharge.textContent = champCharge.value;
-});
-
-formulaire.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const titre = champTitre.value.trim();
-  if (!titre) return;
-  const importance = Number(champImportance.value);
-  const urgence = Number(champUrgence.value);
-  const charge = Number(champCharge.value);
-  if (idEnEdition) {
-    const t = taches.find((x) => x.id === idEnEdition);
-    if (t) Object.assign(t, { titre, importance, urgence, charge });
-  } else {
-    taches.push({ id: nouvelId(), titre, importance, urgence, charge, faite: false });
-  }
-  sauvegarder();
-  reinitialiserFormulaire();
-  render();
-});
-
-boutonAnnuler.addEventListener("click", reinitialiserFormulaire);
-
-/* Purge du quadrant « Abandonner » : les vignettes s'évaporent, puis on supprime. */
-boutonPurge.addEventListener("click", () => {
-  const ids = taches
-    .filter((t) => quadrantDe(t) === "abandonner")
-    .map((t) => t.id);
-  if (!ids.length) return;
-  boutonPurge.disabled = true;
-  for (const el of calque.children) {
-    if (ids.includes(el.dataset.id)) el.classList.add("purgee");
-  }
-  setTimeout(() => {
-    taches = taches.filter((t) => !ids.includes(t.id));
-    if (ids.includes(idEnEdition)) reinitialiserFormulaire();
-    sauvegarder();
-    render();
-  }, 470);
-});
-
-window.addEventListener("resize", () => {
-  if (!mode3d) renderMatrice();
 });
 
 appliquerMode();

@@ -1,8 +1,22 @@
 # Pistes d'évolution
 
 Document de réflexion pour les prochaines sessions de travail sur le projet.
-État au 30 juillet 2026 : les 6 outils sont construits, déployés sur GitHub
+État au 7 août 2026 : les 6 outils sont construits, déployés sur GitHub
 Pages, données en `localStorage` uniquement.
+
+**Réalisé le 7 août 2026 :**
+- ✅ Export/import JSON depuis l'accueil (axe 1 niveau 0) ;
+- ✅ Refactorisation (axe 3) : `js/matrice.js` (moteur des matrices glissables,
+  utilisé par Eisenhower et conflits), `js/fiches.js` (formulaires d'édition et
+  lignes de liste, utilisé par 4 outils), CSS communs et palette centralisés
+  dans `style.css`. La mini-matrice SMART reste à part (pas de glisser, points
+  cliquables : le moteur commun n'apporterait rien) ;
+- ✅ Eisenhower : mode 3D expérimental (axe « charge de travail », cube SVG
+  rotatif sans bibliothèque, tri par priorité ⚡ = urgence + importance +
+  rapidité) ;
+- ✅ TKI et DISC : auto-questionnaires à items originaux (aucun item des
+  questionnaires commerciaux — voir l'avertissement affiché sur les pages),
+  module partagé `js/questionnaire.js`.
 
 ## 1. Gestion d'utilisateurs et synchronisation entre appareils
 
@@ -101,12 +115,9 @@ impliquerait plutôt Fly.io ou un petit VPS. La migration du statique lui-même
 est triviale (ce sont des fichiers) — aucun enfermement, donc aucune urgence à
 décider.
 
-## Ordre suggéré si on reprend le projet
+## Ordre suggéré pour la suite
 
-1. Export/import JSON (axe 1 niveau 0) — court et c'est la vraie protection
-   contre la perte de données.
-2. Refactorisation (axe 3) — avant d'ajouter de nouveaux outils, pour ne pas
-   dupliquer une cinquième fois la même logique.
-3. Nouveaux outils (axe 2) selon la formation.
-4. Sync serveur (axe 1 niveaux 1-2) et hébergement (axe 4) seulement si le
+1. Nouveaux outils (axe 2) selon la formation — l'ajout est encore moins
+   coûteux depuis la refactorisation.
+2. Sync serveur (axe 1 niveaux 1-2) et hébergement (axe 4) seulement si le
    besoin se confirme à l'usage.

@@ -1,6 +1,8 @@
 /*
  * Objectifs SMART (grille de vérification) et délégation : profil du
  * collaborateur (compétence × motivation) → style de management conseillé.
+ * La mini-matrice est en lecture seule (points cliquables, pas de glisser) :
+ * elle n'utilise pas le moteur commun js/matrice.js.
  */
 
 const CLE = "smart";
@@ -41,14 +43,9 @@ const etat = {
   objectifs: memorise.objectifs || [],
   collaborateurs: memorise.collaborateurs || [],
 };
-let idEnEdition = null;
 let idSelection = null;
 
 function sauvegarder() { Storage.sauvegarder(CLE, etat); }
-
-function nouvelId(prefixe) {
-  return prefixe + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-}
 
 function styleDe(p) {
   if (p.competence >= 10) return p.motivation >= 10 ? "delegatif" : "participatif";
@@ -82,17 +79,12 @@ function renderObjectifs() {
     const badge = document.createElement("span");
     badge.className = "badge-score " + classeScore(score);
     badge.textContent = score + "/5";
-    const boutonSupprimer = document.createElement("button");
-    boutonSupprimer.type = "button";
-    boutonSupprimer.textContent = "✕";
-    boutonSupprimer.title = "Supprimer";
-    boutonSupprimer.addEventListener("click", () => {
-      if (confirm("Supprimer « " + o.titre + " » ?")) {
+    const boutonSupprimer = boutonIcone("✕", "Supprimer",
+      confirmerSuppression(o.titre, () => {
         etat.objectifs = etat.objectifs.filter((x) => x.id !== o.id);
         sauvegarder();
         renderObjectifs();
-      }
-    });
+      }));
     entete.append(titre, badge, boutonSupprimer);
     carte.appendChild(entete);
 
@@ -141,15 +133,6 @@ const listeCollabs = document.getElementById("liste-collabs");
 const conseil = document.getElementById("conseil");
 const conseilTitre = document.getElementById("conseil-titre");
 const conseilTexte = document.getElementById("conseil-texte");
-const formulaireCollab = document.getElementById("formulaire-collab");
-const champNom = document.getElementById("champ-nom");
-const champCompetence = document.getElementById("champ-competence");
-const champMotivation = document.getElementById("champ-motivation");
-const valeurCompetence = document.getElementById("valeur-competence");
-const valeurMotivation = document.getElementById("valeur-motivation");
-const titreFormulaire = document.getElementById("titre-formulaire");
-const boutonValider = document.getElementById("bouton-valider");
-const boutonAnnuler = document.getElementById("bouton-annuler");
 
 function renderCollabs() {
   const MARGE = 30;
@@ -174,45 +157,25 @@ function renderCollabs() {
   for (const p of etat.collaborateurs) {
     const s = styleDe(p);
     const li = document.createElement("li");
-    li.className = "collab" + (p.id === idSelection ? " selection" : "");
+    li.className = "ligne-fiche collab" + (p.id === idSelection ? " selection" : "");
 
-    const pastille = document.createElement("span");
-    pastille.className = "pastille s-" + s;
-    pastille.title = STYLES[s].nom;
-
-    const corps = document.createElement("span");
-    corps.className = "collab-corps";
-    const nom = document.createElement("span");
-    nom.className = "collab-nom";
-    nom.textContent = p.nom + " — " + STYLES[s].nom;
-    const scores = document.createElement("span");
-    scores.className = "collab-scores";
-    scores.textContent = "Compétence " + p.competence + " · Motivation " + p.motivation;
-    corps.append(nom, scores);
+    const corps = corpsFiche(p.nom + " — " + STYLES[s].nom,
+      "Compétence " + p.competence + " · Motivation " + p.motivation);
     corps.addEventListener("click", () => selectionner(p.id));
 
-    const boutonEditer = document.createElement("button");
-    boutonEditer.type = "button";
-    boutonEditer.textContent = "✎";
-    boutonEditer.title = "Modifier";
-    boutonEditer.addEventListener("click", () => editerCollab(p.id));
-
-    const boutonSupprimer = document.createElement("button");
-    boutonSupprimer.type = "button";
-    boutonSupprimer.textContent = "✕";
-    boutonSupprimer.title = "Supprimer";
-    boutonSupprimer.addEventListener("click", () => {
-      if (confirm("Supprimer « " + p.nom + " » ?")) {
+    li.append(
+      elementPastille("s-" + s, STYLES[s].nom),
+      corps,
+      boutonIcone("✎", "Modifier", () => editeur.editer(p)),
+      boutonIcone("✕", "Supprimer", confirmerSuppression(p.nom, () => {
         etat.collaborateurs = etat.collaborateurs.filter((x) => x.id !== p.id);
-        if (idEnEdition === p.id) reinitialiserFormulaire();
+        editeur.annulerEditionDe(p.id);
         if (idSelection === p.id) idSelection = null;
         sauvegarder();
         renderCollabs();
         majConseil();
-      }
-    });
-
-    li.append(pastille, corps, boutonEditer, boutonSupprimer);
+      }))
+    );
     listeCollabs.appendChild(li);
   }
 }
@@ -233,60 +196,37 @@ function majConseil() {
   conseil.className = "conseil s-" + s;
 }
 
-function editerCollab(id) {
-  const p = etat.collaborateurs.find((x) => x.id === id);
-  if (!p) return;
-  idEnEdition = id;
-  champNom.value = p.nom;
-  champCompetence.value = p.competence;
-  champMotivation.value = p.motivation;
-  valeurCompetence.textContent = p.competence;
-  valeurMotivation.textContent = p.motivation;
-  titreFormulaire.textContent = "Modifier « " + p.nom + " »";
-  boutonValider.textContent = "Enregistrer";
-  boutonAnnuler.hidden = false;
-  champNom.focus();
-}
-
-function reinitialiserFormulaire() {
-  idEnEdition = null;
-  formulaireCollab.reset();
-  valeurCompetence.textContent = champCompetence.value;
-  valeurMotivation.textContent = champMotivation.value;
-  titreFormulaire.textContent = "À qui déléguer ?";
-  boutonValider.textContent = "Ajouter";
-  boutonAnnuler.hidden = true;
-}
-
-champCompetence.addEventListener("input", () => {
-  valeurCompetence.textContent = champCompetence.value;
-});
-champMotivation.addEventListener("input", () => {
-  valeurMotivation.textContent = champMotivation.value;
-});
-
-formulaireCollab.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const nom = champNom.value.trim();
-  if (!nom) return;
-  const competence = Number(champCompetence.value);
-  const motivation = Number(champMotivation.value);
-  if (idEnEdition) {
-    const p = etat.collaborateurs.find((x) => x.id === idEnEdition);
-    if (p) Object.assign(p, { nom, competence, motivation });
-    idSelection = idEnEdition;
-  } else {
-    const p = { id: nouvelId("c"), nom, competence, motivation };
-    etat.collaborateurs.push(p);
-    idSelection = p.id;
-  }
-  sauvegarder();
-  reinitialiserFormulaire();
-  renderCollabs();
-  majConseil();
+const editeur = creerEditeur({
+  formulaire: document.getElementById("formulaire-collab"),
+  titreFormulaire: document.getElementById("titre-formulaire"),
+  boutonValider: document.getElementById("bouton-valider"),
+  boutonAnnuler: document.getElementById("bouton-annuler"),
+  champTexte: document.getElementById("champ-nom"),
+  proprieteTexte: "nom",
+  curseurs: [
+    { champ: document.getElementById("champ-competence"),
+      sortie: document.getElementById("valeur-competence"), propriete: "competence" },
+    { champ: document.getElementById("champ-motivation"),
+      sortie: document.getElementById("valeur-motivation"), propriete: "motivation" },
+  ],
+  libelleNouveau: "À qui déléguer ?",
+  libelleModifier: (p) => "Modifier « " + p.nom + " »",
+  surValidation(valeurs, idEnEdition) {
+    if (idEnEdition) {
+      const p = etat.collaborateurs.find((x) => x.id === idEnEdition);
+      if (p) Object.assign(p, valeurs);
+      idSelection = idEnEdition;
+    } else {
+      const p = Object.assign({ id: nouvelId("c") }, valeurs);
+      etat.collaborateurs.push(p);
+      idSelection = p.id;
+    }
+    sauvegarder();
+    renderCollabs();
+    majConseil();
+  },
 });
 
-boutonAnnuler.addEventListener("click", reinitialiserFormulaire);
 window.addEventListener("resize", renderCollabs);
 
 renderObjectifs();

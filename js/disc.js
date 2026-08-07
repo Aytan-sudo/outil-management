@@ -13,15 +13,12 @@ const RAYON = 195;
 const DIMENSIONS = ["d", "i", "s", "c"];
 
 let personnes = Storage.charger(CLE, []);
-let idEnEdition = null;
 
 const calque = document.getElementById("calque-personnes");
 const listePersonnes = document.getElementById("liste-personnes");
 const formulaire = document.getElementById("formulaire-personne");
 const champNom = document.getElementById("champ-nom");
 const titreFormulaire = document.getElementById("titre-formulaire");
-const boutonValider = document.getElementById("bouton-valider");
-const boutonAnnuler = document.getElementById("bouton-annuler");
 const champs = {};
 const sorties = {};
 for (const dim of DIMENSIONS) {
@@ -30,10 +27,6 @@ for (const dim of DIMENSIONS) {
 }
 
 function sauvegarder() { Storage.sauvegarder(CLE, personnes); }
-
-function nouvelId() {
-  return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-}
 
 function dominante(p) {
   return DIMENSIONS.reduce((meilleure, dim) =>
@@ -85,7 +78,7 @@ function renderDisque() {
     texte.textContent = p.nom;
 
     groupe.append(cercle, texte);
-    groupe.addEventListener("click", () => editerPersonne(p.id));
+    groupe.addEventListener("click", () => editeur.editer(p));
     calque.appendChild(groupe);
   }
 }
@@ -98,7 +91,7 @@ function renderListe() {
   listePersonnes.innerHTML = "";
   for (const p of personnes) {
     const li = document.createElement("li");
-    li.className = "personne-ligne";
+    li.className = "ligne-fiche";
 
     const dim = dominante(p);
     const badge = document.createElement("span");
@@ -106,93 +99,48 @@ function renderListe() {
     badge.textContent = dim.toUpperCase();
     badge.title = "Dimension dominante";
 
-    const corps = document.createElement("span");
-    corps.className = "personne-corps";
-    const nom = document.createElement("span");
-    nom.className = "personne-nom";
-    nom.textContent = p.nom;
-    const scores = document.createElement("span");
-    scores.className = "personne-scores";
-    scores.textContent = texteScores(p);
-    corps.append(nom, scores);
-
-    const boutonEditer = document.createElement("button");
-    boutonEditer.type = "button";
-    boutonEditer.textContent = "✎";
-    boutonEditer.title = "Modifier";
-    boutonEditer.addEventListener("click", () => editerPersonne(p.id));
-
-    const boutonSupprimer = document.createElement("button");
-    boutonSupprimer.type = "button";
-    boutonSupprimer.textContent = "✕";
-    boutonSupprimer.title = "Supprimer";
-    boutonSupprimer.addEventListener("click", () => {
-      if (confirm("Supprimer « " + p.nom + " » ?")) {
+    li.append(
+      badge,
+      corpsFiche(p.nom, texteScores(p)),
+      boutonIcone("✎", "Modifier", () => editeur.editer(p)),
+      boutonIcone("✕", "Supprimer", confirmerSuppression(p.nom, () => {
         personnes = personnes.filter((x) => x.id !== p.id);
-        if (idEnEdition === p.id) reinitialiserFormulaire();
+        editeur.annulerEditionDe(p.id);
         sauvegarder();
         render();
-      }
-    });
-
-    li.append(badge, corps, boutonEditer, boutonSupprimer);
+      }))
+    );
     listePersonnes.appendChild(li);
   }
 }
 
 /* --- Formulaire --- */
 
-function editerPersonne(id) {
-  const p = personnes.find((x) => x.id === id);
-  if (!p) return;
-  idEnEdition = id;
-  champNom.value = p.nom;
-  for (const dim of DIMENSIONS) {
-    champs[dim].value = p[dim];
-    sorties[dim].textContent = p[dim];
-  }
-  titreFormulaire.textContent = "Modifier « " + p.nom + " »";
-  boutonValider.textContent = "Enregistrer";
-  boutonAnnuler.hidden = false;
-  champNom.focus();
-  formulaire.scrollIntoView({ behavior: "smooth", block: "nearest" });
-}
-
-function reinitialiserFormulaire() {
-  idEnEdition = null;
-  formulaire.reset();
-  for (const dim of DIMENSIONS) {
-    sorties[dim].textContent = champs[dim].value;
-  }
-  titreFormulaire.textContent = "Nouvelle personne";
-  boutonValider.textContent = "Ajouter";
-  boutonAnnuler.hidden = true;
-}
-
-for (const dim of DIMENSIONS) {
-  champs[dim].addEventListener("input", () => {
-    sorties[dim].textContent = champs[dim].value;
-  });
-}
-
-formulaire.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const nom = champNom.value.trim();
-  if (!nom) return;
-  const valeurs = {};
-  for (const dim of DIMENSIONS) valeurs[dim] = Number(champs[dim].value);
-  if (idEnEdition) {
-    const p = personnes.find((x) => x.id === idEnEdition);
-    if (p) Object.assign(p, { nom }, valeurs);
-  } else {
-    personnes.push(Object.assign({ id: nouvelId(), nom }, valeurs));
-  }
-  sauvegarder();
-  reinitialiserFormulaire();
-  render();
+const editeur = creerEditeur({
+  formulaire,
+  titreFormulaire,
+  boutonValider: document.getElementById("bouton-valider"),
+  boutonAnnuler: document.getElementById("bouton-annuler"),
+  champTexte: champNom,
+  proprieteTexte: "nom",
+  curseurs: DIMENSIONS.map((dim) => ({
+    champ: champs[dim],
+    sortie: sorties[dim],
+    propriete: dim,
+  })),
+  libelleNouveau: "Nouvelle personne",
+  libelleModifier: (p) => "Modifier « " + p.nom + " »",
+  surValidation(valeurs, idEnEdition) {
+    if (idEnEdition) {
+      const p = personnes.find((x) => x.id === idEnEdition);
+      if (p) Object.assign(p, valeurs);
+    } else {
+      personnes.push(Object.assign({ id: nouvelId("p") }, valeurs));
+    }
+    sauvegarder();
+    render();
+  },
 });
-
-boutonAnnuler.addEventListener("click", reinitialiserFormulaire);
 
 /* --- Auto-questionnaire ---
    Quatre affirmations par dimension (0–4 chacune) ; le total 0–16 est ramené

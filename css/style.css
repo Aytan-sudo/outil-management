@@ -6,6 +6,16 @@
   --accent: #2563eb;
   --bordure: #e2e6ea;
   --rayon: 12px;
+
+  /* Palette des outils (quadrants, dimensions, teintes d'accueil) */
+  --bleu: #2a78d6;
+  --rouge: #d03b3b;
+  --vert: #1baf7a;
+  --jaune: #eda100;
+  --jaune-fonce: #a87200;
+  --gris: #898781;
+  --violet: #4a3aa7;
+  --orange: #eb6834;
 }
 
 * { box-sizing: border-box; }
@@ -58,6 +68,189 @@ body {
 .note {
   font-size: 0.85rem;
   color: var(--texte-secondaire);
+}
+
+/* --- Matrices à quadrants (Eisenhower, conflits, mini-matrice SMART) --- */
+
+.matrice {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+  overflow: hidden;
+}
+
+.quadrant { position: absolute; width: 50%; height: 50%; }
+
+.etiquette {
+  position: absolute;
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.etiquette small {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--texte-secondaire);
+}
+
+.ligne { position: absolute; background: var(--bordure); }
+.ligne-verticale   { left: 50%; top: 0; width: 1px; height: 100%; }
+.ligne-horizontale { top: 50%; left: 0; height: 1px; width: 100%; }
+
+.axe {
+  position: absolute;
+  font-size: 0.7rem;
+  color: var(--gris);
+  pointer-events: none;
+}
+
+.matrice-vide {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 34ch;
+  text-align: center;
+  color: var(--texte-secondaire);
+  font-size: 0.9rem;
+  pointer-events: none;
+}
+
+.calque-vignettes { position: absolute; inset: 0; pointer-events: none; }
+.calque-vignettes .vignette { pointer-events: auto; }
+
+.vignette {
+  position: absolute;
+  width: 120px;
+  transform: translate(-50%, -50%);
+  background: var(--carte);
+  border: 1px solid var(--bordure);
+  border-left: 4px solid var(--texte-secondaire);
+  border-radius: 8px;
+  padding: 0.3rem 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.vignette.en-cours {
+  cursor: grabbing;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  z-index: 10;
+}
+.vignette-titre {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.vignette-scores { font-size: 0.7rem; color: var(--texte-secondaire); }
+
+/* --- Formulaires de fiche (champ texte + curseurs) --- */
+
+.formulaire-fiche {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.formulaire-fiche h2 { margin: 0; font-size: 1rem; }
+.formulaire-fiche input[type="text"] {
+  padding: 0.5rem;
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  font: inherit;
+}
+.formulaire-fiche label {
+  font-size: 0.85rem;
+  color: var(--texte-secondaire);
+}
+.formulaire-fiche input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.actions-formulaire { display: flex; gap: 0.5rem; }
+.actions-formulaire button {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.actions-formulaire button.secondaire {
+  background: var(--bordure);
+  color: var(--texte);
+}
+
+/* Ligne « libellé + curseur + valeur » (TKI, DISC) */
+label.ligne-score {
+  display: grid;
+  grid-template-columns: var(--libelle-score, 10.5rem) 1fr 2.4rem;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  padding: 0.35rem 0;
+}
+label.ligne-score input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+label.ligne-score output {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--texte-secondaire);
+}
+
+/* --- Lignes de liste (une fiche par ligne : pastille, nom, scores, ✎ ✕) --- */
+
+.ligne-fiche {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--carte);
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  padding: 0.45rem 0.6rem;
+}
+.ligne-fiche button {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.15rem;
+  opacity: 0.6;
+}
+.ligne-fiche button:hover { opacity: 1; }
+
+.fiche-corps { flex: 1; min-width: 0; }
+.fiche-nom {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fiche-scores { font-size: 0.7rem; color: var(--texte-secondaire); }
+
+.pastille {
+  flex-shrink: 0;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--texte-secondaire);
 }
 
 /* --- Auto-questionnaires (TKI, DISC) --- */
@@ -177,12 +370,12 @@ body.accueil {
   height: 9px;
   border-radius: 50%;
 }
-.points-deco span:nth-child(1) { background: #2a78d6; }
-.points-deco span:nth-child(2) { background: #1baf7a; }
-.points-deco span:nth-child(3) { background: #4a3aa7; }
-.points-deco span:nth-child(4) { background: #d03b3b; }
-.points-deco span:nth-child(5) { background: #eb6834; }
-.points-deco span:nth-child(6) { background: #eda100; }
+.points-deco span:nth-child(1) { background: var(--bleu); }
+.points-deco span:nth-child(2) { background: var(--vert); }
+.points-deco span:nth-child(3) { background: var(--violet); }
+.points-deco span:nth-child(4) { background: var(--rouge); }
+.points-deco span:nth-child(5) { background: var(--orange); }
+.points-deco span:nth-child(6) { background: var(--jaune); }
 
 .grille-outils {
   display: grid;

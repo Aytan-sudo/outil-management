@@ -1,8 +1,8 @@
 :root {
-  --s-directif: #2a78d6;
-  --s-delegatif: #1baf7a;
-  --s-persuasif: #d03b3b;
-  --s-participatif: #eda100;
+  --s-directif: var(--bleu);
+  --s-delegatif: var(--vert);
+  --s-persuasif: var(--rouge);
+  --s-participatif: var(--jaune);
 }
 
 .smart-layout {
@@ -77,7 +77,7 @@
 }
 .badge-score.score-ok { background: #0ca30c; }
 .badge-score.score-moyen { background: #b97e00; }
-.badge-score.score-faible { background: #d03b3b; }
+.badge-score.score-faible { background: var(--rouge); }
 
 .critere {
   display: flex;
@@ -95,47 +95,7 @@
   font-size: 0.78rem;
 }
 
-/* --- Formulaire collaborateur --- */
-
-.formulaire-collab {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-.formulaire-collab h2 { margin: 0; }
-.formulaire-collab input[type="text"] {
-  padding: 0.5rem;
-  border: 1px solid var(--bordure);
-  border-radius: 8px;
-  font: inherit;
-}
-.formulaire-collab label {
-  font-size: 0.85rem;
-  color: var(--texte-secondaire);
-}
-.formulaire-collab input[type="range"] {
-  width: 100%;
-  accent-color: var(--accent);
-}
-
-.actions-formulaire { display: flex; gap: 0.5rem; }
-.actions-formulaire button {
-  flex: 1;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 8px;
-  background: var(--accent);
-  color: white;
-  font: inherit;
-  font-weight: 500;
-  cursor: pointer;
-}
-.actions-formulaire button.secondaire {
-  background: var(--bordure);
-  color: var(--texte);
-}
-
-/* --- Mini-matrice de délégation --- */
+/* --- Mini-matrice de délégation (socle des quadrants dans style.css) --- */
 
 .mini-matrice {
   position: relative;
@@ -146,7 +106,6 @@
   margin-bottom: 0.75rem;
 }
 
-.mini-matrice .quadrant { position: absolute; width: 50%; height: 50%; }
 .quadrant.q-directif     { top: 0; left: 0;
   background: color-mix(in srgb, var(--s-directif) 13%, transparent); }
 .quadrant.q-delegatif    { top: 0; right: 0;
@@ -156,26 +115,13 @@
 .quadrant.q-participatif { bottom: 0; right: 0;
   background: color-mix(in srgb, var(--s-participatif) 17%, transparent); }
 
-.mini-matrice .etiquette {
-  position: absolute;
-  font-size: 0.9rem;
-  font-weight: 700;
-}
+.mini-matrice .etiquette { font-size: 0.9rem; }
 .q-directif .etiquette     { top: 0.5rem; left: 0.7rem; color: var(--s-directif); }
 .q-delegatif .etiquette    { top: 0.5rem; right: 0.7rem; color: var(--s-delegatif); }
 .q-persuasif .etiquette    { bottom: 0.5rem; left: 0.7rem; color: var(--s-persuasif); }
-.q-participatif .etiquette { bottom: 0.5rem; right: 0.7rem; color: #a87200; }
+.q-participatif .etiquette { bottom: 0.5rem; right: 0.7rem; color: var(--jaune-fonce); }
 
-.ligne { position: absolute; background: var(--bordure); }
-.ligne-verticale   { left: 50%; top: 0; width: 1px; height: 100%; }
-.ligne-horizontale { top: 50%; left: 0; height: 1px; width: 100%; }
-
-.axe {
-  position: absolute;
-  font-size: 0.65rem;
-  color: #898781;
-  pointer-events: none;
-}
+.mini-matrice .axe { font-size: 0.65rem; }
 .axe-competence { bottom: 0.25rem; left: 50%; transform: translateX(-50%); }
 .axe-motivation {
   top: 50%;
@@ -243,50 +189,13 @@
   gap: 0.5rem;
 }
 
-.collab {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  border: 1px solid var(--bordure);
-  border-radius: 8px;
-  padding: 0.45rem 0.6rem;
-}
 .collab.selection { border-color: var(--accent); }
+.collab .fiche-corps { cursor: pointer; }
 
-.pastille {
-  flex-shrink: 0;
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--texte-secondaire);
-}
 .pastille.s-directif     { background: var(--s-directif); }
 .pastille.s-delegatif    { background: var(--s-delegatif); }
 .pastille.s-persuasif    { background: var(--s-persuasif); }
 .pastille.s-participatif { background: var(--s-participatif); }
-
-.collab-corps { flex: 1; min-width: 0; cursor: pointer; }
-.collab-nom {
-  display: block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.collab-scores { font-size: 0.7rem; color: var(--texte-secondaire); }
-
-.collab button {
-  flex-shrink: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0.15rem;
-  opacity: 0.6;
-}
-.collab button:hover { opacity: 1; }
 
 /* --- Mobile --- */
 

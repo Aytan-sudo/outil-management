@@ -16,27 +16,7 @@
 .zone-questionnaire { grid-area: quest; }
 .zone-carte { grid-area: carte; }
 
-/* --- Saisie des scores --- */
-
-.ligne-score {
-  display: grid;
-  grid-template-columns: 10.5rem 1fr 2rem;
-  align-items: center;
-  gap: 0.6rem;
-  font-size: 0.9rem;
-  padding: 0.35rem 0;
-}
-
-.ligne-score input[type="range"] {
-  width: 100%;
-  accent-color: var(--accent);
-}
-
-.ligne-score output {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  color: var(--texte-secondaire);
-}
+/* --- Saisie des scores (.ligne-score : socle dans style.css) --- */
 
 .profil-tki { margin-bottom: 0; }
 .profil-tki strong { color: var(--texte); }
@@ -111,7 +91,7 @@
 }
 
 .axe-svg { stroke: #c3c2b7; stroke-width: 1; }
-.etiquette-axe { fill: #898781; font-size: 12px; }
+.etiquette-axe { fill: var(--gris); font-size: 12px; }
 
 .mode circle {
   fill: #898781;
@@ -149,6 +129,6 @@
     grid-template-columns: 1fr;
     grid-template-areas: "scores" "quest" "situation" "carte";
   }
-  .ligne-score { grid-template-columns: 8rem 1fr 2rem; }
+  .zone-scores { --libelle-score: 8rem; }
   .legende-modes { grid-template-columns: 1fr; }
 }

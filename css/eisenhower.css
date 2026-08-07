@@ -1,8 +1,8 @@
 :root {
-  --q-faire: #d03b3b;
-  --q-planifier: #2a78d6;
-  --q-deleguer: #eda100;
-  --q-abandonner: #898781;
+  --q-faire: var(--rouge);
+  --q-planifier: var(--bleu);
+  --q-deleguer: var(--jaune);
+  --q-abandonner: var(--gris);
 }
 
 .eisenhower-layout {
@@ -17,19 +17,8 @@
 
 .zone-matrice { min-height: 0; }
 
-/* --- Matrice --- */
+/* --- Matrice (spécificités ; le socle est dans style.css) --- */
 
-.matrice {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: var(--carte);
-  border: 1px solid var(--bordure);
-  border-radius: var(--rayon);
-  overflow: hidden;
-}
-
-.quadrant { position: absolute; width: 50%; height: 50%; }
 .quadrant.q-planifier  { top: 0; left: 0;
   background: color-mix(in srgb, var(--q-planifier) 13%, transparent); }
 .quadrant.q-faire      { top: 0; right: 0;
@@ -39,54 +28,18 @@
 .quadrant.q-deleguer   { bottom: 0; right: 0;
   background: color-mix(in srgb, var(--q-deleguer) 17%, transparent); }
 
-.etiquette {
-  position: absolute;
-  font-size: 1.1rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-.etiquette small {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 400;
-  color: var(--texte-secondaire);
-}
 .q-planifier  .etiquette { top: 0.6rem; left: 0.9rem;  color: var(--q-planifier); }
 .q-faire      .etiquette { top: 0.6rem; right: 0.9rem; color: var(--q-faire); text-align: right; }
 .q-abandonner .etiquette { bottom: 0.6rem; left: 0.9rem; color: var(--q-abandonner); }
-.q-deleguer   .etiquette { bottom: 0.6rem; right: 0.9rem; color: #a87200; text-align: right; }
+.q-deleguer   .etiquette { bottom: 0.6rem; right: 0.9rem; color: var(--jaune-fonce); text-align: right; }
 
-.ligne { position: absolute; background: var(--bordure); }
-.ligne-verticale   { left: 50%; top: 0; width: 1px; height: 100%; }
-.ligne-horizontale { top: 50%; left: 0; height: 1px; width: 100%; }
-
-.axe {
-  position: absolute;
-  font-size: 0.7rem;
-  color: #898781;
-  pointer-events: none;
-}
 .axe-urgence { bottom: 0.3rem; left: 50%; transform: translateX(-50%); }
 .axe-importance {
-  left: 0.3rem; top: 50%;
+  top: 50%;
   transform: translate(-50%, -50%) rotate(-90deg);
   transform-origin: center;
   left: 1rem;
 }
-
-.matrice-vide {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 34ch;
-  text-align: center;
-  color: var(--texte-secondaire);
-  font-size: 0.9rem;
-  pointer-events: none;
-}
-
-.calque-vignettes { position: absolute; inset: 0; pointer-events: none; }
-.calque-vignettes .vignette { pointer-events: auto; }
 
 .bouton-purge {
   position: absolute;
@@ -110,21 +63,8 @@
 
 /* --- Vignettes --- */
 
-.vignette {
-  position: absolute;
-  width: 130px;
-  transform: translate(-50%, -50%);
-  background: var(--carte);
-  border: 1px solid var(--bordure);
-  border-left: 4px solid var(--texte-secondaire);
-  border-radius: 8px;
-  padding: 0.3rem 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
-}
+.vignette { width: 130px; }
+.vignette-titre { font-weight: 500; }
 .vignette.q-faire      { border-left-color: var(--q-faire); }
 .vignette.q-planifier  { border-left-color: var(--q-planifier); }
 .vignette.q-deleguer   { border-left-color: var(--q-deleguer); }
@@ -136,23 +76,8 @@
   opacity: 0;
 }
 
-.vignette.en-cours {
-  cursor: grabbing;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
-  z-index: 10;
-}
 .vignette.faite { opacity: 0.45; }
 .vignette.faite .vignette-titre { text-decoration: line-through; }
-
-.vignette-titre {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.vignette-scores { font-size: 0.7rem; color: var(--texte-secondaire); }
 
 /* --- Mode 3D --- */
 
@@ -202,7 +127,7 @@
 }
 .scene3d .texte-priorite {
   font-size: 12px;
-  fill: #2563eb;
+  fill: var(--accent);
 }
 .scene3d .titre-3d {
   font-size: 11px;
@@ -230,48 +155,6 @@
   min-height: 0;
 }
 
-.formulaire-tache {
-  background: var(--carte);
-  border: 1px solid var(--bordure);
-  border-radius: var(--rayon);
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-.formulaire-tache h2 { margin: 0; font-size: 1rem; }
-.formulaire-tache input[type="text"] {
-  padding: 0.5rem;
-  border: 1px solid var(--bordure);
-  border-radius: 8px;
-  font: inherit;
-}
-.formulaire-tache label {
-  font-size: 0.85rem;
-  color: var(--texte-secondaire);
-}
-.formulaire-tache input[type="range"] {
-  width: 100%;
-  accent-color: var(--accent);
-}
-
-.actions-formulaire { display: flex; gap: 0.5rem; }
-.actions-formulaire button {
-  flex: 1;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 8px;
-  background: var(--accent);
-  color: white;
-  font: inherit;
-  font-weight: 500;
-  cursor: pointer;
-}
-.actions-formulaire button.secondaire {
-  background: var(--bordure);
-  color: var(--texte);
-}
-
 .liste-taches {
   flex: 1;
   overflow-y: auto;
@@ -283,49 +166,13 @@
   gap: 0.5rem;
 }
 
-.tache {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--carte);
-  border: 1px solid var(--bordure);
-  border-radius: 8px;
-  padding: 0.45rem 0.6rem;
-}
-.tache.faite .tache-titre { text-decoration: line-through; opacity: 0.5; }
+.tache .fiche-nom { font-weight: 400; }
+.tache.faite .fiche-nom { text-decoration: line-through; opacity: 0.5; }
 
-.pastille {
-  flex-shrink: 0;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--texte-secondaire);
-}
 .pastille.q-faire      { background: var(--q-faire); }
 .pastille.q-planifier  { background: var(--q-planifier); }
 .pastille.q-deleguer   { background: var(--q-deleguer); }
 .pastille.q-abandonner { background: var(--q-abandonner); }
-
-.tache-corps { flex: 1; min-width: 0; }
-.tache-titre {
-  display: block;
-  font-size: 0.85rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.tache-scores { font-size: 0.7rem; color: var(--texte-secondaire); }
-
-.tache button {
-  flex-shrink: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0.15rem;
-  opacity: 0.6;
-}
-.tache button:hover { opacity: 1; }
 
 /* --- Mobile --- */
 
