@@ -12,6 +12,7 @@
   <header class="outil-entete">
     <a class="retour" href="../index.html">← Accueil</a>
     <h1>Matrice d'Eisenhower</h1>
+    <button type="button" id="bouton-mode3d" class="bascule-3d">🧊 Mode 3D</button>
   </header>
 
   <main class="eisenhower-layout">
@@ -39,6 +40,15 @@
           placée selon ses scores. Glissez-la pour ajuster.</p>
         <div id="calque-vignettes" class="calque-vignettes"></div>
       </div>
+
+      <div class="scene3d" id="scene3d" hidden>
+        <svg id="cube3d" viewBox="0 0 640 560" role="img"
+          aria-label="Cube 3D des tâches selon urgence, importance et charge de travail"></svg>
+        <p id="cube-vide" class="matrice-vide">Ajoutez une tâche : elle apparaîtra
+          dans le cube, placée selon ses trois scores.</p>
+        <p class="note aide-3d">Faites tourner le cube (doigt ou souris) ·
+          cliquez une tâche pour la modifier.</p>
+      </div>
     </section>
 
     <aside class="zone-liste">
@@ -51,12 +61,17 @@
         <label>Urgence : <output id="valeur-urgence">10</output>/20
           <input type="range" id="champ-urgence" min="0" max="20" value="10">
         </label>
+        <label id="ligne-charge" hidden>Charge de travail : <output id="valeur-charge">10</output>/20
+          <input type="range" id="champ-charge" min="0" max="20" value="10">
+        </label>
         <div class="actions-formulaire">
           <button type="submit" id="bouton-valider">Ajouter</button>
           <button type="button" id="bouton-annuler" class="secondaire" hidden>Annuler</button>
         </div>
       </form>
 
+      <p id="note-tri" class="note note-tri" hidden>Liste triée par priorité
+        ⚡ = urgence + importance + rapidité (20 − charge).</p>
       <ul id="liste-taches" class="liste-taches"></ul>
     </aside>
   </main>

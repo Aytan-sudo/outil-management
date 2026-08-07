@@ -154,6 +154,73 @@
 }
 .vignette-scores { font-size: 0.7rem; color: var(--texte-secondaire); }
 
+/* --- Mode 3D --- */
+
+.bascule-3d {
+  margin-left: auto;
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--bordure);
+  border-radius: 999px;
+  background: var(--carte);
+  color: var(--texte);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.bascule-3d:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--bordure));
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.scene3d {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: var(--carte);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon);
+  overflow: hidden;
+}
+
+.scene3d svg {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  touch-action: none;
+  cursor: grab;
+}
+.scene3d svg:active { cursor: grabbing; }
+
+.scene3d .texte-3d {
+  font-size: 13px;
+  fill: var(--texte-secondaire);
+  pointer-events: none;
+}
+.scene3d .texte-priorite {
+  font-size: 12px;
+  fill: #2563eb;
+}
+.scene3d .titre-3d {
+  font-size: 11px;
+  fill: var(--texte);
+  pointer-events: none;
+}
+
+.point3d { cursor: pointer; }
+.point3d circle { stroke: white; stroke-width: 1.5; }
+.point3d.faite { opacity: 0.35; }
+
+.aide-3d {
+  margin: 0 0 0.55rem;
+  text-align: center;
+}
+
+.note-tri { margin: 0; }
+
 /* --- Colonne de droite --- */
 
 .zone-liste {
@@ -268,6 +335,7 @@
     height: auto;
   }
   .matrice { height: auto; aspect-ratio: 1; }
+  .scene3d { height: auto; aspect-ratio: 0.95; }
   .vignette { width: 104px; }
   .etiquette { font-size: 0.95rem; }
   .etiquette small { display: none; }
